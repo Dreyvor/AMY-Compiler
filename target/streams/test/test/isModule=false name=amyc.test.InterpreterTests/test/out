@@ -1,8 +1,8 @@
 [0m[[0m[0minfo[0m] [0m[0m[34mTest run started[0m[0m
 [0m[[0m[0minfo[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestEmptyObject[0m started[0m
-[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestEmptyObject[0m finished, took 0.067 sec[0m
+[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestEmptyObject[0m finished, took 0.189 sec[0m
 [0m[[0m[0minfo[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestMinimalError[0m started[0m
-[0m[[0m[31merror[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[31mtestMinimalError[0m failed: scala.[31mNotImplementedError[0m: an implementation is missing, took 0.012 sec[0m
+[0m[[0m[31merror[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[31mtestMinimalError[0m failed: scala.[31mNotImplementedError[0m: an implementation is missing, took 0.027 sec[0m
 [0m[[0m[31merror[0m] [0m[0m    at scala.Predef$.$qmark$qmark$qmark(Predef.scala:284)[0m
 [0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.interpret$1(Interpreter.scala:157)[0m
 [0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.$anonfun$run$12(Interpreter.scala:167)[0m
@@ -33,5 +33,5 @@
 [0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestSuite.shouldFail(TestSuite.scala:42)[0m
 [0m[[0m[31merror[0m] [0m[0m    at amyc.test.ExecutionTests.testMinimalError(ExecutionTests.scala:13)[0m
 [0m[[0m[31merror[0m] [0m[0m    ...[0m
-[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestMinimalError[0m finished, took 0.021 sec[0m
-[0m[[0m[0minfo[0m] [0m[0m[34mTest run finished: [0m[31m1 failed[0m[34m, [0m[34m0 ignored[0m[34m, 2 total, 0.176s[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestMinimalError[0m finished, took 0.035 sec[0m
+[0m[[0m[0minfo[0m] [0m[0m[34mTest run finished: [0m[31m1 failed[0m[34m, [0m[34m0 ignored[0m[34m, 2 total, 0.524s[0m[0m

@@ -68,23 +68,23 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case Variable(name) =>
           ???
         case IntLiteral(i) =>
-          ???
+          IntValue(i)
         case BooleanLiteral(b) =>
-          ???
+          BooleanValue(b)
         case StringLiteral(s) =>
-          ???
+          StringValue(s)
         case UnitLiteral() =>
-          ???
+          UnitValue
         case Plus(lhs, rhs) =>
           IntValue(interpret(lhs).asInt + interpret(rhs).asInt)
         case Minus(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt - interpret(rhs).asInt)
         case Times(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt * interpret(rhs).asInt)
         case Div(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt / interpret(rhs).asInt)
         case Mod(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt % interpret(rhs).asInt)
         case LessThan(lhs, rhs) =>
           ???
         case LessEquals(lhs, rhs) =>

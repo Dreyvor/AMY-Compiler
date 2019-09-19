@@ -1,4 +1,4 @@
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(amyc.test.InterpreterTests, com.novocode.junit.JUnitFingerprint@548e1cf0, false, [SuiteSelector])[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(amyc.test.InterpreterTests, com.novocode.junit.JUnitFingerprint@6eedbf58, false, [SuiteSelector])[0m
 [0m[[0m[0mdebug[0m] [0m[0mSummary for JUnit not available.[0m
 [0m[[0m[31merror[0m] [0m[0mFailed: Total 2, Failed 1, Errors 0, Passed 1[0m
 [0m[[0m[31merror[0m] [0m[0mFailed tests:[0m
