@@ -1,0 +1,37 @@
+[0m[[0m[0minfo[0m] [0m[0m[34mTest run started[0m[0m
+[0m[[0m[0minfo[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestEmptyObject[0m started[0m
+[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestEmptyObject[0m finished, took 0.067 sec[0m
+[0m[[0m[0minfo[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestMinimalError[0m started[0m
+[0m[[0m[31merror[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[31mtestMinimalError[0m failed: scala.[31mNotImplementedError[0m: an implementation is missing, took 0.012 sec[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.Predef$.$qmark$qmark$qmark(Predef.scala:284)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.interpret$1(Interpreter.scala:157)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.$anonfun$run$12(Interpreter.scala:167)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.Option.foreach(Option.scala:257)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.$anonfun$run$11(Interpreter.scala:165)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.$anonfun$run$11$adapted(Interpreter.scala:164)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.collection.immutable.List.foreach(List.scala:389)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.run(Interpreter.scala:164)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.interpreter.Interpreter$.run(Interpreter.scala:10)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.utils.Pipeline$$anon$1.run(Pipeline.scala:12)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.CompilerTest.runPipeline(CompilerTest.scala:12)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.CompilerTest.$anonfun$runPipelineRedirected$1(CompilerTest.scala:21)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:12)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.util.DynamicVariable.withValue(DynamicVariable.scala:58)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.Console$.withIn(Console.scala:226)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestUtils.$anonfun$testWithRedirectedIO$2(TestUtils.scala:18)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.util.DynamicVariable.withValue(DynamicVariable.scala:58)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.Console$.withErr(Console.scala:192)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestUtils.$anonfun$testWithRedirectedIO$1(TestUtils.scala:17)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.util.DynamicVariable.withValue(DynamicVariable.scala:58)[0m
+[0m[[0m[31merror[0m] [0m[0m    at scala.Console$.withOut(Console.scala:163)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestUtils.testWithRedirectedIO(TestUtils.scala:16)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestUtils.testWithRedirectedIO$(TestUtils.scala:11)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.CompilerTest.testWithRedirectedIO(CompilerTest.scala:8)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.CompilerTest.runPipelineRedirected(CompilerTest.scala:21)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.CompilerTest.demandFailure(CompilerTest.scala:82)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestSuite.shouldFail(TestSuite.scala:37)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.TestSuite.shouldFail(TestSuite.scala:42)[0m
+[0m[[0m[31merror[0m] [0m[0m    at amyc.test.ExecutionTests.testMinimalError(ExecutionTests.scala:13)[0m
+[0m[[0m[31merror[0m] [0m[0m    ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mTest amyc.test.[33mInterpreterTests[0m.[36mtestMinimalError[0m finished, took 0.021 sec[0m
+[0m[[0m[0minfo[0m] [0m[0m[34mTest run finished: [0m[31m1 failed[0m[34m, [0m[34m0 ignored[0m[34m, 2 total, 0.176s[0m[0m
