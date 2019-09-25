@@ -66,7 +66,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
     def interpret(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
       expr match {
         case Variable(name) =>
-          ???
+          locals(name)
         case IntLiteral(i) =>
           IntValue(i)
         case BooleanLiteral(b) =>
@@ -82,37 +82,53 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case Times(lhs, rhs) =>
           IntValue(interpret(lhs).asInt * interpret(rhs).asInt)
         case Div(lhs, rhs) =>
-          IntValue(interpret(lhs).asInt / interpret(rhs).asInt)
+          if (interpret(rhs).asInt != 0) IntValue(interpret(lhs).asInt / interpret(rhs).asInt)
+          else ctx.reporter.fatal("Division by 0")
         case Mod(lhs, rhs) =>
-          IntValue(interpret(lhs).asInt % interpret(rhs).asInt)
+          if (interpret(rhs).asInt != 0) IntValue(interpret(lhs).asInt % interpret(rhs).asInt)
+          else ctx.reporter.fatal("Modulo by 0")
         case LessThan(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asInt < interpret(rhs).asInt)
         case LessEquals(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asInt <= interpret(rhs).asInt)
         case And(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asBoolean && interpret(rhs).asBoolean)
         case Or(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asBoolean || interpret(rhs).asBoolean)
         case Equals(lhs, rhs) =>
-          ??? // Hint: Take care to implement Amy equality semantics
+          interpret(lhs) match{
+            case IntValue(i) => BooleanValue(i == interpret(rhs).asInt)
+            case StringValue(s) => BooleanValue(s.equals(interpret(rhs).asString))
+            case BooleanValue(b) => BooleanValue(b == interpret(rhs).asBoolean)
+            case _ => ???
+          }
+           // Hint: Take care to implement Amy equality semantics
         case Concat(lhs, rhs) =>
-          ???
+          StringValue(interpret(lhs).asString + interpret(rhs).asString)
         case Not(e) =>
-          ???
+          BooleanValue(!interpret(e).asBoolean)
         case Neg(e) =>
-          ???
-        case Call(qname, args) =>
-          ???
+          IntValue(-interpret(e).asInt)
+        case Call(qname, args) =>{
+          if(isConstructor(qname)){ CaseClassValue(qname,args.map(interpret)) }
+          else if(builtIns.contains(findFunctionOwner(qname), qname.name)) { builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) }
+          else{
+            ???
+          }
+        }
           // Hint: Check if it is a call to a constructor first,
           //       then if it is a built-in function (otherwise it is a normal function).
           //       Use the helper methods provided above to retrieve information from the symbol table.
           //       Think how locals should be modified.
         case Sequence(e1, e2) =>
-          ???
+          interpret(e1)
+          interpret(e2)
         case Let(df, value, body) =>
-          ???
+          interpret(body)(locals + (df.name -> interpret(value)))
         case Ite(cond, thenn, elze) =>
-          ???
+          if (interpret(cond).asBoolean) {interpret(thenn)}
+          else {interpret(elze)}
+
         case Match(scrut, cases) =>
           // Hint: We give you a skeleton to implement pattern matching
           //       and the main body of the implementation
@@ -132,7 +148,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
               case (IntValue(i1), LiteralPattern(IntLiteral(i2))) =>
                 ???
               case (BooleanValue(b1), LiteralPattern(BooleanLiteral(b2))) =>
-                ??? 
+                ???
               case (StringValue(_), LiteralPattern(StringLiteral(_))) =>
                 ???
               case (UnitValue, LiteralPattern(UnitLiteral())) =>
@@ -153,8 +169,10 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           // No case matched: The program fails with a match error
           ctx.reporter.fatal(s"Match error: ${evS.toString}@${scrut.position}")
 
-        case Error(msg) =>
-          ???
+        case Error(msg) =>{
+          println("Error: "+interpret(msg).asString)
+          return IntValue(1)
+        }
       }
     }
 
