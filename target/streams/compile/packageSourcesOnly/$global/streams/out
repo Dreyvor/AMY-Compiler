@@ -1,0 +1,7 @@
+[0m[[0m[0minfo[0m] [0m[0mPackaging /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/amyc_2.12-1.5-sources.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter/Interpreter.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/interpreter/Interpreter.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/Main.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/Main.scala[0m
+[0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m

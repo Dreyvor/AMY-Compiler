@@ -98,7 +98,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case Equals(lhs, rhs) =>
           interpret(lhs) match{
             case IntValue(i) => BooleanValue(i == interpret(rhs).asInt)
-            case StringValue(s) => BooleanValue(s.equals(interpret(rhs).asString))
+            case UnitValue => BooleanValue(true)
             case BooleanValue(b) => BooleanValue(b == interpret(rhs).asBoolean)
             case _ => BooleanValue(interpret(lhs) eq interpret(rhs))
           }
@@ -113,9 +113,9 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           if(isConstructor(qname)){ CaseClassValue(qname,args.map(interpret)) }
           else if(builtIns.contains(findFunctionOwner(qname), qname.name)) { builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) }
           else {
-            val myFunction: FunDef = findFunction(findFunctionOwner(qname), qname.name)
-            val myLocals : Map[Identifier, Value] = myFunction.paramNames.zip(args.map(interpret)).toMap
-            interpret(myFunction.body)(myLocals)
+            val myFunc: FunDef = findFunction(findFunctionOwner(qname), qname.name)
+            val newLocals : Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpret)).toMap
+            interpret(myFunc.body)(newLocals)
           }
           // Hint: Check if it is a call to a constructor first,
           //       then if it is a built-in function (otherwise it is a normal function).
@@ -188,8 +188,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           ctx.reporter.fatal(s"Match error: ${evS.toString}@${scrut.position}")
 
         case Error(msg) =>{
-          println("Error: "+interpret(msg).asString)
-          return IntValue(1)
+          ctx.reporter.fatal(interpret(msg).asString)
         }
       }
     }
