@@ -64,7 +64,7 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
     // TODO: Boolean literals
 
     // TODO: Operators
-    // NOTE: You can use `oneof("abc")` as a shortcut for `word("a") | word("b") | word("c")`
+    // NOTE: You can use `oneOf("abc")` as a shortcut for `word("a") | word("b") | word("c")`
 
     // TODO: Identifiers
 
