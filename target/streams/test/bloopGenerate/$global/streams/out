@@ -1,0 +1,4 @@
+[debug] [amyc-test] Classpath dependencies List()
+[debug] [amyc-test] Dependencies from configurations List(amyc)
+[debug] Bloop wrote the configuration of project 'amyc-test' to '/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/.bloop/amyc-test.json'
+[success] Generated .bloop/amyc-test.json

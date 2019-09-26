@@ -1,0 +1,4 @@
+[debug] [amy-compiler-build] Classpath dependencies List()
+[debug] [amy-compiler-build] Dependencies from configurations List()
+[debug] Bloop wrote the configuration of project 'amy-compiler-build' to '/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/project/.bloop/amy-compiler-build.json'
+[success] Generated .bloop/amy-compiler-build.json
