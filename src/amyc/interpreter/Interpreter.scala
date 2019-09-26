@@ -3,7 +3,7 @@ package interpreter
 
 import utils._
 import ast.SymbolicTreeModule._
-import ast.Identifier
+import ast.{Identifier, TreeModule}
 import analyzer.SymbolTable
 
 // An interpreter for Amy programs, implemented in Scala
@@ -66,53 +66,70 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
     def interpret(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
       expr match {
         case Variable(name) =>
-          ???
+          locals(name)
         case IntLiteral(i) =>
-          ???
+          IntValue(i)
         case BooleanLiteral(b) =>
-          ???
+          BooleanValue(b)
         case StringLiteral(s) =>
-          ???
+          StringValue(s)
         case UnitLiteral() =>
-          ???
+          UnitValue
         case Plus(lhs, rhs) =>
           IntValue(interpret(lhs).asInt + interpret(rhs).asInt)
         case Minus(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt - interpret(rhs).asInt)
         case Times(lhs, rhs) =>
-          ???
+          IntValue(interpret(lhs).asInt * interpret(rhs).asInt)
         case Div(lhs, rhs) =>
-          ???
+          if (interpret(rhs).asInt != 0) IntValue(interpret(lhs).asInt / interpret(rhs).asInt)
+          else ctx.reporter.fatal("Division by 0")
         case Mod(lhs, rhs) =>
-          ???
+          if (interpret(rhs).asInt != 0) IntValue(interpret(lhs).asInt % interpret(rhs).asInt)
+          else ctx.reporter.fatal("Modulo by 0")
         case LessThan(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asInt < interpret(rhs).asInt)
         case LessEquals(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asInt <= interpret(rhs).asInt)
         case And(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asBoolean && interpret(rhs).asBoolean)
         case Or(lhs, rhs) =>
-          ???
+          BooleanValue(interpret(lhs).asBoolean || interpret(rhs).asBoolean)
         case Equals(lhs, rhs) =>
-          ??? // Hint: Take care to implement Amy equality semantics
+          interpret(lhs) match{
+            case IntValue(i) => BooleanValue(i == interpret(rhs).asInt)
+            case StringValue(s) => BooleanValue(s.equals(interpret(rhs).asString))
+            case BooleanValue(b) => BooleanValue(b == interpret(rhs).asBoolean)
+            case _ => BooleanValue(interpret(lhs) eq interpret(rhs))
+          }
+           // Hint: Take care to implement Amy equality semantics
         case Concat(lhs, rhs) =>
-          ???
+          StringValue(interpret(lhs).asString + interpret(rhs).asString)
         case Not(e) =>
-          ???
+          BooleanValue(!interpret(e).asBoolean)
         case Neg(e) =>
-          ???
+          IntValue(-interpret(e).asInt)
         case Call(qname, args) =>
-          ???
+          if(isConstructor(qname)){ CaseClassValue(qname,args.map(interpret)) }
+          else if(builtIns.contains(findFunctionOwner(qname), qname.name)) { builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) }
+          else {
+            val myFunction: FunDef = findFunction(findFunctionOwner(qname), qname.name)
+            val myLocals : Map[Identifier, Value] = myFunction.paramNames.zip(args.map(interpret)).toMap
+            interpret(myFunction.body)(myLocals)
+          }
           // Hint: Check if it is a call to a constructor first,
           //       then if it is a built-in function (otherwise it is a normal function).
           //       Use the helper methods provided above to retrieve information from the symbol table.
           //       Think how locals should be modified.
         case Sequence(e1, e2) =>
-          ???
+          interpret(e1)
+          interpret(e2)
         case Let(df, value, body) =>
-          ???
+          interpret(body)(locals + (df.name -> interpret(value)))
         case Ite(cond, thenn, elze) =>
-          ???
+          if (interpret(cond).asBoolean) {interpret(thenn)}
+          else {interpret(elze)}
+
         case Match(scrut, cases) =>
           // Hint: We give you a skeleton to implement pattern matching
           //       and the main body of the implementation
@@ -126,19 +143,36 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           def matchesPattern(v: Value, pat: Pattern): Option[List[(Identifier, Value)]] = {
             ((v, pat): @unchecked) match {
               case (_, WildcardPattern()) =>
-                ???
+                Some(Nil)
               case (_, IdPattern(name)) =>
                 Some(List(name -> v))
               case (IntValue(i1), LiteralPattern(IntLiteral(i2))) =>
-                ???
+                /*
+                x match {
+                  case 12 => ...
+                }
+                 */
+                if (i1 == i2) Some(Nil)
+                else None
               case (BooleanValue(b1), LiteralPattern(BooleanLiteral(b2))) =>
-                ??? 
+                if (b1 == b2) Some(Nil)
+                else None
               case (StringValue(_), LiteralPattern(StringLiteral(_))) =>
-                ???
+                //Never matches
+                None
               case (UnitValue, LiteralPattern(UnitLiteral())) =>
-                ???
+                Some(Nil)
               case (CaseClassValue(con1, realArgs), CaseClassPattern(con2, formalArgs)) =>
-                ???
+                /*
+                Cons(h, t) match {
+                  case Cons (h, t) => ...
+                }
+                 */
+                if (con1 == con2){
+                  val myMap = formalArgs.zip(realArgs).map(e => matchesPattern(e._2, e._1))
+                  if(myMap.contains(None)) None
+                  else Some(myMap.flatten.flatten)
+                } else None
             }
           }
 
@@ -153,8 +187,10 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           // No case matched: The program fails with a match error
           ctx.reporter.fatal(s"Match error: ${evS.toString}@${scrut.position}")
 
-        case Error(msg) =>
-          ???
+        case Error(msg) =>{
+          println("Error: "+interpret(msg).asString)
+          return IntValue(1)
+        }
       }
     }
 
