@@ -3,7 +3,7 @@ package interpreter
 
 import utils._
 import ast.SymbolicTreeModule._
-import ast.Identifier
+import ast.{Identifier, TreeModule}
 import analyzer.SymbolTable
 
 // An interpreter for Amy programs, implemented in Scala
@@ -100,7 +100,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             case IntValue(i) => BooleanValue(i == interpret(rhs).asInt)
             case StringValue(s) => BooleanValue(s.equals(interpret(rhs).asString))
             case BooleanValue(b) => BooleanValue(b == interpret(rhs).asBoolean)
-            case _ => ???
+            case _ => BooleanValue(interpret(lhs) eq interpret(rhs))
           }
            // Hint: Take care to implement Amy equality semantics
         case Concat(lhs, rhs) =>
@@ -109,13 +109,14 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           BooleanValue(!interpret(e).asBoolean)
         case Neg(e) =>
           IntValue(-interpret(e).asInt)
-        case Call(qname, args) =>{
+        case Call(qname, args) =>
           if(isConstructor(qname)){ CaseClassValue(qname,args.map(interpret)) }
           else if(builtIns.contains(findFunctionOwner(qname), qname.name)) { builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) }
-          else{
-            ???
+          else {
+            val myFunction: FunDef = findFunction(findFunctionOwner(qname), qname.name)
+            val myLocals : Map[Identifier, Value] = myFunction.paramNames.zip(args.map(interpret)).toMap
+            interpret(myFunction.body)(myLocals)
           }
-        }
           // Hint: Check if it is a call to a constructor first,
           //       then if it is a built-in function (otherwise it is a normal function).
           //       Use the helper methods provided above to retrieve information from the symbol table.
@@ -142,19 +143,36 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           def matchesPattern(v: Value, pat: Pattern): Option[List[(Identifier, Value)]] = {
             ((v, pat): @unchecked) match {
               case (_, WildcardPattern()) =>
-                ???
+                Some(Nil)
               case (_, IdPattern(name)) =>
                 Some(List(name -> v))
               case (IntValue(i1), LiteralPattern(IntLiteral(i2))) =>
-                ???
+                /*
+                x match {
+                  case 12 => ...
+                }
+                 */
+                if (i1 == i2) Some(Nil)
+                else None
               case (BooleanValue(b1), LiteralPattern(BooleanLiteral(b2))) =>
-                ???
+                if (b1 == b2) Some(Nil)
+                else None
               case (StringValue(_), LiteralPattern(StringLiteral(_))) =>
-                ???
+                //Never matches
+                None
               case (UnitValue, LiteralPattern(UnitLiteral())) =>
-                ???
+                Some(Nil)
               case (CaseClassValue(con1, realArgs), CaseClassPattern(con2, formalArgs)) =>
-                ???
+                /*
+                Cons(h, t) match {
+                  case Cons (h, t) => ...
+                }
+                 */
+                if (con1 == con2){
+                  val myMap = formalArgs.zip(realArgs).map(e => matchesPattern(e._2, e._1))
+                  if(myMap.contains(None)) None
+                  else Some(myMap.flatten.flatten)
+                } else None
             }
           }
 
