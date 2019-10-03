@@ -3,11 +3,12 @@ package parsing
 
 import utils._
 import java.io.File
-import scala.Char
 
+import amyc.parsing.Lexer.word
+
+import scala.Char
 import scallion.lexical._
 import scallion.input._
-
 import amyc.utils.Position
 
 // The lexer for Amy.
@@ -88,14 +89,14 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
         val myInt: Int = cs.mkString.toInt
         IntLitToken(myInt).setPos(range._1)
       } catch {
-        case e: NumberFormatException => ErrorToken("Math error: Impossible to convert this number into an Int due to overflowing ").setPos(range._1)
+        case e: NumberFormatException => ErrorToken("Math error: Impossible to convert this number into an Int due to overflowing").setPos(range._1)
       }
     }
     },
 
     // String literals
-    elem('"') ~ many(any) ~ elem('"')
-      |> {(cs, range) => StringLitToken(cs.mkString.substring(1,cs.length)).setPos(range._1)},
+    elem('"') ~ many(elem(c => c != '"' && c != '\n')) ~ elem('"')
+      |> {(cs, range) => StringLitToken(cs.mkString.substring(1,cs.length-1)).setPos(range._1)},
 
     // Delimiters and whitespace
     oneOf(".,:;(){}[]=") |> {(cs, range) => DelimiterToken(cs.mkString).setPos(range._1)},
@@ -105,9 +106,12 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
     word("//") ~ many(elem(_ != '\n'))
       |> { cs => CommentToken(cs.mkString("")) },
 
-    // TODO: Multiline comments
+    // Multiline comments
     // NOTE: Amy does not support nested multi-line comments (e.g. `/* foo /* bar */ */`).
     //       Make sure that unclosed multi-line comments result in an ErrorToken.
+    word("/*") ~ many(elem(_ != '*') ~ elem(_ != '/')) ~ word("*/") |> {cs => CommentToken(cs.mkString(""))}, // Standard multi-line comments
+    //word("/*") ~ many(elem(c => c != '*') ~ elem(c => c!='/')) |> {(_,range) => ErrorToken("Error: unclosed multiline comment. Missing '*/'").setPos(range._1)}
+
   ) onError {
     // We also emit ErrorTokens for Scallion-handled errors.
     (cs, range) => ErrorToken(cs.mkString).setPos(range._1)
@@ -123,8 +127,9 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
       val source = Source.fromFile(file, SourcePositioner(file))
       it ++= lexer.spawn(source).filter {
         token =>
-          // TODO: Remove all whitespace and comment tokens
-          ???
+          // Remove all whitespace and comment tokens
+          //true
+          !token.isInstanceOf[SpaceToken] && !token.isInstanceOf[CommentToken]
       }.map {
         case token@ErrorToken(error) => ctx.reporter.fatal("Unknown token at " + token.position + ": " + error)
         case token => token
