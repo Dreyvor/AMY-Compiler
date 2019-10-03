@@ -3,6 +3,7 @@ package parsing
 
 import utils._
 import java.io.File
+import scala.Char
 
 import scallion.lexical._
 import scallion.input._
@@ -11,7 +12,7 @@ import amyc.utils.Position
 
 // The lexer for Amy.
 object Lexer extends Pipeline[List[File], Iterator[Token]]
-                with Lexers[Token, Char, SourcePosition] {
+  with Lexers[Token, Char, SourcePosition] {
 
   /** Tiny Scallion-lexer reference:
     * ==============================
@@ -27,25 +28,27 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
     *   - `r1 | r2`      matches either expression `r1` or expression `r2`
     *   - `r1 ~ r2`      matches `r1` followed by `r2`
     *   - `oneOf("xy")`  matches either "x" or "y"
-    *                    (i.e., it is a shorthand of `word` and `|` for single characters)
+    * (i.e., it is a shorthand of `word` and `|` for single characters)
     *   - `elem(c)`      matches character `c`
     *   - `elem(f)`      matches any character for which the boolean predicate `f` holds 
     *   - `opt(r)`       matches `r` or nothing at all
     *   - `many(r)`      matches any number of repetitions of `r` (including none at all)
     *   - `many1(r)`     matches any non-zero number of repetitions of `r`
-    *  
+    *
     * To define the token that should be output for a given expression, one can use
     * the `|>` combinator with an expression on the left-hand side and a function
     * producing the token on the right. The function is given the sequence of matched
     * characters and the source-position range as arguments.
-    * 
+    *
     * For instance,
     *
-    *   `elem(_.isDigit) ~ word("kg") |> {
-    *     (cs, range) => WeightLiteralToken(cs.mkString).setPos(range._1)) }`
+    * `elem(_.isDigit) ~ word("kg") |> {
+    * (cs, range) => WeightLiteralToken(cs.mkString).setPos(range._1)) }`
     *
     * will match a single digit followed by the characters "kg" and turn them into a
     * "WeightLiteralToken" whose value will be the full string matched (e.g. "1kg").
+    *
+    * https://epfl-lara.github.io/scallion/scallion/index.html
     */
 
 
@@ -54,27 +57,49 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
   val lexer = Lexer(
     // Keywords
     word("abstract") | word("case") | word("class") |
-    word("def") | word("else") | word("extends") |
-    word("if") | word("match") | word("object") |
-    word("val") | word("error") | word("_")
+      word("def") | word("else") | word("extends") |
+      word("if") | word("match") | word("object") |
+      word("val") | word("error") | word("_")
       |> { (cs, range) => KeywordToken(cs.mkString).setPos(range._1) },
 
-    // TODO: Primitive type names
+    // Primitive type names
+    word("Int") | word("String") | word("Boolean") | word("Unit")
+      |> { (cs, range) => PrimTypeToken(cs.mkString).setPos(range._1) },
 
-    // TODO: Boolean literals
+    // Boolean literals
+    word("true") | word("false")
+      |> { (cs, range) => BoolLitToken(cs.mkString.toBoolean).setPos(range._1) },
 
-    // TODO: Operators
+    // Operators
     // NOTE: You can use `oneOf("abc")` as a shortcut for `word("a") | word("b") | word("c")`
+    oneOf("+-*/%<") | word("<=") | word("&&") | word("||") | word("==") | word("++")
+      |> { (cs, range) => OperatorToken(cs.mkString).setPos(range._1) },
 
-    // TODO: Identifiers
+    // Identifiers
+    elem(c => c.isLetter) ~ many(elem(e => e.isLetterOrDigit || e == '_'))
+      |> { (cs, range) => IdentifierToken(cs.mkString).setPos(range._1) },
 
-    // TODO: Integer literals
+    // Integer literals
     // NOTE: Make sure to handle invalid (e.g. overflowing) integer values safely by
     //       emitting an ErrorToken instead.
+    many1(elem(c => c.isDigit))
+      |> { (cs, range) => {
+      try {
+        val myInt: Int = cs.mkString.toInt
+        IntLitToken(myInt).setPos(range._1)
+      } catch {
+        case e: NumberFormatException => ErrorToken("Math error: Impossible to convert this number into an Int due to overflowing ").setPos(range._1)
+      }
+    }
+    },
 
-    // TODO: String literals
+    // String literals
+    elem('"') ~ many(any) ~ elem('"')
+      |> {(cs, range) => StringLitToken(cs.mkString.substring(1,cs.length)).setPos(range._1)},
 
-    // TODO: Delimiters and whitespace
+    // Delimiters and whitespace
+    oneOf(".,:;(){}[]=") |> {(cs, range) => DelimiterToken(cs.mkString).setPos(range._1)},
+    many1(elem(_.isWhitespace)) |> {(_, range) => SpaceToken().setPos(range._1)},
 
     // Single line comments
     word("//") ~ many(elem(_ != '\n'))
