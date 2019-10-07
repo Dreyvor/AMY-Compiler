@@ -21,7 +21,8 @@ class LexerTests extends TestSuite {
   @Test def testTestLists = shouldOutput("TestLists")
   @Test def testMoodleTest = shouldOutput("MoodleTest")
 
-  @Test def testPersonalTest = shouldOutput("PersonalTest")
+  @Test def testMultilineComment = shouldOutput("Multiline_comments")
+  @Test def testUnclosedComment = shouldOutput("Unclosed_comment")
 
   @Test def testSingleAmp = shouldFail("SingleAmp")
 

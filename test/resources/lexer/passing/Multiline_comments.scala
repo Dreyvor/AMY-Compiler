@@ -15,4 +15,4 @@ abstract Int "Some text"
 
 /* Some
 * comment
- */
+*/

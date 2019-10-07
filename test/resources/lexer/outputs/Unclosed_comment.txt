@@ -1,0 +1,2 @@
+StringLitToken(Hello)(1:1)
+PrimTypeToken(Int)(1:9)
