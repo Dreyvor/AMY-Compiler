@@ -8,3 +8,11 @@
 
 /* multiline comment on one line * with star at middle */
 "Hello" Int abstract
+
+/* Another multi line comment */
+
+abstract Int "Some text"
+
+/* Some
+* comment
+ */

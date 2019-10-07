@@ -1,1 +1,7 @@
-blablabla
+StringLitToken(Hello)(10:1)
+PrimTypeToken(Int)(10:9)
+KeywordToken(abstract)(10:13)
+KeywordToken(abstract)(14:1)
+PrimTypeToken(Int)(14:10)
+StringLitToken(Some text)(14:14)
+EOFToken()(18:4)
