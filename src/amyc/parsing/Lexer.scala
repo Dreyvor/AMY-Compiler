@@ -73,7 +73,7 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
 
     // Operators
     // NOTE: You can use `oneOf("abc")` as a shortcut for `word("a") | word("b") | word("c")`
-    oneOf("+-*/%<") | word("<=") | word("&&") | word("||") | word("==") | word("++")
+    oneOf("+-*/%<!") | word("<=") | word("&&") | word("||") | word("==") | word("++")
       |> { (cs, range) => OperatorToken(cs.mkString).setPos(range._1) },
 
     // Identifiers
@@ -99,7 +99,7 @@ object Lexer extends Pipeline[List[File], Iterator[Token]]
       |> {(cs, range) => StringLitToken(cs.mkString.substring(1,cs.length-1)).setPos(range._1)},
 
     // Delimiters and whitespace
-    oneOf(".,:;(){}[]=") |> {(cs, range) => DelimiterToken(cs.mkString).setPos(range._1)},
+    oneOf(".,:;(){}[]=") | word("=>") |> {(cs, range) => DelimiterToken(cs.mkString).setPos(range._1)},
     many1(elem(_.isWhitespace)) |> {(_, range) => SpaceToken().setPos(range._1)},
 
     // Single line comments
