@@ -43,13 +43,31 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   // A definition within a module.
-  lazy val definition: Syntax[ClassOrFunDef] = ???
+  lazy val definition: Syntax[ClassOrFunDef] = abstractClassDefinition | caseClassDefinition | functionDefinition
+
+  lazy val abstractClassDefinition: Syntax[ClassOrFunDef] =
+    (kw("abstract") ~ kw("class") ~ identifier).map {
+      case kw ~ _ ~ id => AbstractClassDef(id).setPos(kw)
+    }
+
+  lazy val caseClassDefinition: Syntax[ClassOrFunDef] =
+    (kw("case") ~ kw("class") ~ identifier ~ "(" ~ parameters ~ ")" ~ kw("extends") ~ identifier).map{
+      case kw ~ _ ~ name ~ _ ~ params ~ _ ~ _ ~ parent => CaseClassDef(name, params.map(_.tt), parent).setPos(kw)
+    }
+
+  lazy val functionDefinition: Syntax[ClassOrFunDef] =
+    (kw("def") ~ identifier ~ "(" ~ parameters ~ ")" ~ ":" ~ typeTree ~ "=" ~ "{" ~ expr ~ "}").map{
+      case kw ~ name ~ _ ~ params ~ _ ~ _ ~ t ~ _ ~ _ ~ body ~ _ => FunDef(name, params, t, body).setPos(kw)
+    }
 
   // A list of parameter definitions.
   lazy val parameters: Syntax[List[ParamDef]] = repsep(parameter, ",").map(_.toList)
 
   // A parameter definition, i.e., an identifier along with the expected type.
-  lazy val parameter: Syntax[ParamDef] = ???
+  lazy val parameter: Syntax[ParamDef] =
+    (identifierPos ~ ":" ~ typeTree).map{
+      case namePos ~ _ ~ t => ParamDef(namePos._1, t).setPos(namePos._2)
+    }
 
   // A type expression.
   lazy val typeTree: Syntax[TypeTree] = primitiveType | identifierType
@@ -66,7 +84,11 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   // A user-defined type (such as `List`).
-  lazy val identifierType: Syntax[TypeTree] = ???
+  lazy val identifierType: Syntax[TypeTree] =
+    (opt(identifierPos ~ ".".skip) ~ identifierPos).map {
+      case Some(m) ~ name => TypeTree(ClassType(QualifiedName(Option(m._1), name._1))).setPos(m._2)
+      case None ~ name => TypeTree(ClassType(QualifiedName(None, name._1))).setPos(name._2)
+    }
 
 
   // An expression.
@@ -78,10 +100,16 @@ object Parser extends Pipeline[Iterator[Token], Program]
 
   // A pattern as part of a mach case.
   lazy val pattern: Syntax[Pattern] = recursive {
-    literalPattern | wildPattern | ???
+    literalPattern | wildPattern | idPattern | ???
   }
 
+  lazy val idPattern: Syntax[Pattern] =
+    identifierPos.map{
+      case name => IdPattern(name._1).setPos(name._2)
+    }
+
   lazy val literalPattern: Syntax[Pattern] = ???
+
 
   lazy val wildPattern: Syntax[Pattern] = ???
 
@@ -94,6 +122,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
 
   // TODO: Other definitions.
   //       Feel free to decompose the rules in whatever way convenient.
+
 
 
   // Ensures the grammar is in LL(1), otherwise prints some counterexamples

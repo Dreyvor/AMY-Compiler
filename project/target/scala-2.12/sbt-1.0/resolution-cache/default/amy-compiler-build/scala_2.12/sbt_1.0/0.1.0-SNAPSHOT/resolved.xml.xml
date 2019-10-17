@@ -4,7 +4,7 @@
 		module="amy-compiler-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20191003085513"
+		publication="20191017085651"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
