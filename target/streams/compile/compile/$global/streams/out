@@ -1,2 +1,7 @@
 [0m[[0m[0mdebug[0m] [0m[0mAcquiring lock on file /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/project/target/.sbt-compilation-infos/amyc-compile/.sbt-idea-lock ...[0m
+[0m[[0m[33mwarn[0m] [0m[0m/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Parser.scala:186:5: match may not be exhaustive.[0m
+[0m[[0m[33mwarn[0m] [0m[0mIt would fail on the following inputs: ((_ : null), _, _), (_, "!", _), (_, _, _)[0m
+[0m[[0m[33mwarn[0m] [0m[0m    {[0m
+[0m[[0m[33mwarn[0m] [0m[0m    ^[0m
+[0m[[0m[33mwarn[0m] [0m[0mone warning found[0m
 [0m[[0m[0mdebug[0m] [0m[0mReleasing lock on file /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/project/target/.sbt-compilation-infos/amyc-compile/.sbt-idea-lock.[0m
