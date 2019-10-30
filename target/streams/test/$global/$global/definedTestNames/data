@@ -1,1 +1,1 @@
-["amyc.test.InterpreterTests"]
+["amyc.test.LexerTests","amyc.test.ParserTests"]

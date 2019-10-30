@@ -1,5 +1,7 @@
-[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(amyc.test.InterpreterTests, com.novocode.junit.JUnitFingerprint@376a5654, false, [SuiteSelector])[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(amyc.test.LexerTests, com.novocode.junit.JUnitFingerprint@24d3c52c, false, [SuiteSelector])[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(amyc.test.ParserTests, com.novocode.junit.JUnitFingerprint@24d3c52c, false, [SuiteSelector])[0m
 [0m[[0m[0mdebug[0m] [0m[0mSummary for JUnit not available.[0m
-[0m[[0m[31merror[0m] [0m[0mFailed: Total 2, Failed 1, Errors 0, Passed 1[0m
-[0m[[0m[31merror[0m] [0m[0mFailed tests:[0m
-[0m[[0m[31merror[0m] [0m[0m	amyc.test.InterpreterTests[0m
+[0m[[0m[0minfo[0m] [0m[0mPassed: Total 6, Failed 0, Errors 0, Passed 6[0m
+[0m[[0m[0mdebug[0m] [0m[0mPassed tests:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc.test.ParserTests[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc.test.LexerTests[0m

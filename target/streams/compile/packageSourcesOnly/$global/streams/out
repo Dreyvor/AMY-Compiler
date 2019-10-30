@@ -4,6 +4,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Tokens.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Position.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Position.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/Identifier.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/ast/Identifier.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Pipeline.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Pipeline.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/UniqueCounter.scala[0m
@@ -16,10 +18,16 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Context.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Document.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Document.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Parser.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Parser.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Reporter.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Reporter.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/ast/TreeModule.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/AmycFatalError.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/AmycFatalError.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Lexer.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Lexer.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/Printer.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/ast/Printer.scala[0m
 [0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m
