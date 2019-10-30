@@ -27,68 +27,56 @@ object Parser extends Pipeline[Iterator[Token], Program]
   implicit def delimiter(string: String): Syntax[Token] = elem(DelimiterKind(string))
 
   // An entire program (the starting rule for any Amy file).
-  //NO
   lazy val program: Syntax[Program] = many1(many1(module) ~<~ eof).map(ms => Program(ms.flatten.toList).setPos(ms.head.head))
 
   // A module (i.e., a collection of definitions and an initializer expression)
-  //NO
   lazy val module: Syntax[ModuleDef] = (kw("object") ~ identifier ~ "{" ~ many(definition) ~ opt(expr) ~ "}").map {
     case obj ~ id ~ _ ~ defs ~ body ~ _ => ModuleDef(id, defs.toList, body).setPos(obj)
   }
 
   // An identifier.
-  //NO
   val identifier: Syntax[String] = accept(IdentifierKind) {
     case IdentifierToken(name) => name
   }
 
   // An identifier along with its position.
-  //NO
   val identifierPos: Syntax[(String, Position)] = accept(IdentifierKind) {
     case id@IdentifierToken(name) => (name, id.position)
   }
 
   // A definition within a module.
-  //NO
   lazy val definition: Syntax[ClassOrFunDef] = abstractClassDefinition | caseClassDefinition | functionDefinition
 
-  //NO
   lazy val abstractClassDefinition: Syntax[ClassOrFunDef] =
     (kw("abstract") ~ kw("class") ~ identifier).map {
       case kw ~ _ ~ id => AbstractClassDef(id).setPos(kw)
     }
 
-  //NO
   lazy val caseClassDefinition: Syntax[ClassOrFunDef] =
     (kw("case") ~ kw("class") ~ identifier ~ "(" ~ parameters ~ ")" ~ kw("extends") ~ identifier).map {
       case kw ~ _ ~ name ~ _ ~ params ~ _ ~ _ ~ parent => CaseClassDef(name, params.map(_.tt), parent).setPos(kw)
     }
 
-  //NO
   lazy val functionDefinition: Syntax[ClassOrFunDef] =
     (kw("def") ~ identifier ~ "(" ~ parameters ~ ")" ~ ":" ~ typeTree ~ "=" ~ "{" ~ expr ~ "}").map {
       case kw ~ name ~ _ ~ params ~ _ ~ _ ~ t ~ _ ~ _ ~ body ~ _ => FunDef(name, params, t, body).setPos(kw)
     }
 
   // A list of parameter definitions.
-  //NO
   lazy val parameters: Syntax[List[ParamDef]] = recursive {
     repsep(parameter, ",").map(_.toList)
   } //TODO: Check recursive
 
   // A parameter definition, i.e., an identifier along with the expected type.
-  //NO
   lazy val parameter: Syntax[ParamDef] =
   (identifierPos ~ ":" ~ typeTree).map {
     case namePos ~ _ ~ t => ParamDef(namePos._1, t).setPos(namePos._2)
   }
 
   // A type expression.
-  //NO
   lazy val typeTree: Syntax[TypeTree] = primitiveType | identifierType
 
   // A built-in type (such as `Int`).
-  //NO
   val primitiveType: Syntax[TypeTree] = accept(PrimTypeKind) {
     case tk@PrimTypeToken(name) => TypeTree(name match {
       case "Unit" => UnitType
@@ -100,18 +88,16 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   // A user-defined type (such as `List`).
-  //NO
   lazy val identifierType: Syntax[TypeTree] =
-  (opt(identifierPos ~ ".".skip) ~ identifierPos).map {
-    case Some(m) ~ name => TypeTree(ClassType(QualifiedName(Option(m._1), name._1))).setPos(m._2)
-    case None ~ name => TypeTree(ClassType(QualifiedName(None, name._1))).setPos(name._2)
+  (identifierPos ~ opt("." ~ identifier)).map {
+    case idPos ~ Some(_ ~ m) => TypeTree(ClassType(QualifiedName(Option(idPos._1), m))).setPos(idPos._2)
+    case idPos ~ None => TypeTree(ClassType(QualifiedName(None, idPos._1))).setPos(idPos._2)
   }
 
 
   // An expression.
   // HINT: You can use `operators` to take care of associativity and precedence
   //TODO: HERE IS EXPRESSION
-  //Yes
   lazy val expr: Syntax[Expr] = recursive {
     exprVal | exprSeq
   }
@@ -134,8 +120,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   lazy val exprITE: Syntax[Expr] = recursive {
-    (kw("if") ~ "(".skip ~ expr ~ (")" ~ "{").skip ~ expr ~ ("}" ~ kw("else") ~ "{").skip ~ expr ~ "}".skip
-      ).map {
+    (kw("if") ~ "(".skip ~ expr ~ (")" ~ "{").skip ~ expr ~ ("}" ~ kw("else") ~ "{").skip ~ expr ~ "}".skip).map {
       case kw ~ eTest ~ eTrue ~ eFalse => Ite(eTest, eTrue, eFalse).setPos(kw)
     }
   }
@@ -195,12 +180,10 @@ object Parser extends Pipeline[Iterator[Token], Program]
     }
   }
 
-  lazy val variableOrCall: Syntax[Expr] = variable | call
-
-  lazy val variable: Syntax[Expr] = identifierPos.map { case id => StringLiteral(id._1).setPos(id._2) }
-
-  lazy val call: Syntax[Expr] = (identifierType ~ "(" ~ arguments ~ ")").map {
-    case id ~ _ ~ args ~ _ => Call(id.tpe match { case ClassType(qname) => qname }, args).setPos(id)
+  lazy val variableOrCall: Syntax[Expr] = (identifierPos ~ opt(opt("." ~ identifier) ~ "(" ~ arguments ~ ")")).map {
+    case idPos ~ None => StringLiteral(idPos._1).setPos(idPos._2) //variable
+    case idPos ~ Some(None ~ _ ~ args ~ _) => Call(QualifiedName(None, idPos._1), args).setPos(idPos._2) //call
+    case idPos ~ Some(Some(_ ~ idParent) ~ _ ~ args ~ _) => Call(QualifiedName(Some(idParent), idPos._1), args).setPos(idPos._2) //call
   }
 
   //TODO: BOUND BOTTOM
@@ -214,12 +197,9 @@ object Parser extends Pipeline[Iterator[Token], Program]
     case tk@IntLitToken(value) => IntLiteral(value).setPos(tk)
   }
 
-  lazy val unitOrSubExpr: Syntax[Expr] = unitLit.up[Expr] | parenExpr //TODO: first set not disjoint
-
-  lazy val unitLit: Syntax[Literal[_]] = ("(" ~ ")").map { case o ~ _ => UnitLiteral().setPos(o) }
-
-  lazy val parenExpr: Syntax[Expr] = recursive {
-    ("(" ~ expr ~ ")").map { case _ ~ e ~ _ => e }
+  lazy val unitOrSubExpr: Syntax[Expr] = ("(" ~ opt(expr) ~ ")").map {
+    case o ~ None ~ _ => UnitLiteral().setPos(o)
+    case o ~ Some(e1) ~ _ => e1.setPos(o)
   }
 
   // A pattern as part of a mach case.
@@ -231,20 +211,11 @@ object Parser extends Pipeline[Iterator[Token], Program]
 
   lazy val wildPattern: Syntax[Pattern] = (kw("_")).map { kw => WildcardPattern().setPos(kw) }
 
-  lazy val idOrCaseClassPattern: Syntax[Pattern] = (identifierPos ~ idOrCaseClassPattern2).map{
-    case id ~
+  lazy val idOrCaseClassPattern: Syntax[Pattern] = (identifierPos ~ opt(opt("." ~ identifier) ~ "(" ~ patterns ~ ")")).map {
+    case idPos ~ None => IdPattern(idPos._1).setPos(idPos._2) // idPattern
+    case idPos ~ Some(None ~ _ ~ pats ~ _) => CaseClassPattern(QualifiedName(None, idPos._1), pats)
+    case idPos ~ Some(Some(_ ~ idParent) ~ _ ~ pats ~ _) => CaseClassPattern(QualifiedName(Some(idParent), idPos._1), pats)
   }
-
-  lazy val idOrCaseClassPattern2:Syntax[Expr] = ???
-
-  lazy val caseClassPattern: Syntax[Pattern] = (identifierType ~ "(" ~ patterns ~ ")").map {
-    case id ~ _ ~ pats ~ _ => CaseClassPattern(id.tpe match { case ClassType(qname) => qname }, pats).setPos(id)
-  }
-
-  lazy val idPattern: Syntax[Pattern] =
-    identifierPos.map {
-      name => IdPattern(name._1).setPos(name._2)
-    }
 
   lazy val patterns: Syntax[List[Pattern]] = recursive {
     repsep(pattern, ",").map(_.toList)
