@@ -118,7 +118,11 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   lazy val exprCond: Syntax[Expr] = recursive {
-    exprITE | exprMatch
+    /*exprITE |*/ exprMatch
+  }
+
+  lazy val exprTemp:Syntax[Expr] = recursive{
+    exprBinOp | exprITE
   }
 
   lazy val exprITE: Syntax[Expr] = recursive {
@@ -132,7 +136,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }*/
   //TODO: FIX IT
   lazy val exprMatch: Syntax[Expr] = recursive {
-    (exprBinOp ~ many((kw("match") ~ "{").skip ~ many1(matchCaseDef) ~ "}".skip)).map {
+    (exprTemp ~ many((kw("match") ~ "{").skip ~ many1(matchCaseDef) ~ "}".skip)).map {
       case e ~ seq =>
         if(seq.length <= 0) {e.setPos(e)}
         else{seq.foldLeft(e) { (acc, elem) => Match(acc, elem.toList).setPos(acc) }}
