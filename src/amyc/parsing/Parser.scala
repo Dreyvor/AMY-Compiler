@@ -187,7 +187,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   lazy val variableOrCall: Syntax[Expr] = (identifierPos ~ opt(opt("." ~ identifier) ~ "(" ~ arguments ~ ")")).map {
-    case idPos ~ None => StringLiteral(idPos._1).setPos(idPos._2) //variable
+    case idPos ~ None => Variable(idPos._1).setPos(idPos._2) //variable
     case idPos ~ Some(None ~ _ ~ args ~ _) => Call(QualifiedName(None, idPos._1), args).setPos(idPos._2) //call
     case idPos ~ Some(Some(_ ~ idSon) ~ _ ~ args ~ _) => Call(QualifiedName(Option(idPos._1), idSon), args).setPos(idPos._2) //call
   }
