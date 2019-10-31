@@ -1,13 +1,4 @@
 object Arithmetic {
-  val a:Int = 0;
-
-  val b:Int = 0;
-  if(a == 0){a} else {a}
-  val b:Int = 0;
-
-  case class MyCase(a:Int) extends MySupClass
-  abstract class MySupClass
-
   def pow(b: Int, e: Int): Int = {
     if (e == 0) { 1 }
     else {

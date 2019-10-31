@@ -105,24 +105,20 @@ object Parser extends Pipeline[Iterator[Token], Program]
   }
 
   lazy val exprVal: Syntax[Expr] = recursive {
-    (kw("val") ~ parameter ~ "=" ~ exprCond ~ ";" ~ expr).map {
+    (kw("val") ~ parameter ~ "=" ~ exprMatch ~ ";" ~ expr).map {
       case kw ~ nameAndType ~ _ ~ e1 ~ _ ~ e2 => Let(nameAndType, e1, e2).setPos(kw)
     }
   }
 
   lazy val exprSeq: Syntax[Expr] = recursive {
-    (exprCond ~ opt(";" ~ expr)).map {
+    (exprMatch ~ opt(";" ~ expr)).map {
       case e1 ~ None => e1.setPos(e1)
       case e1 ~ Some(_ ~ e2) => Sequence(e1, e2).setPos(e1)
     }
   }
 
   lazy val exprCond: Syntax[Expr] = recursive {
-    /*exprITE |*/ exprMatch
-  }
-
-  lazy val exprTemp:Syntax[Expr] = recursive{
-    exprBinOp | exprITE
+    exprITE | exprBinOp
   }
 
   lazy val exprITE: Syntax[Expr] = recursive {
@@ -131,12 +127,8 @@ object Parser extends Pipeline[Iterator[Token], Program]
     }
   }
 
-  /*lazy val exprMatch: Syntax[Expr] = (exprBinOp ~ (kw("match") ~ "{").skip ~ many1(matchCaseDef) ~ "}".skip).map {
-    case e ~ cases => Match(e, cases.toList).setPos(e)
-  }*/
-  //TODO: FIX IT
   lazy val exprMatch: Syntax[Expr] = recursive {
-    (exprTemp ~ many((kw("match") ~ "{").skip ~ many1(matchCaseDef) ~ "}".skip)).map {
+    (exprCond ~ many((kw("match") ~ "{").skip ~ many1(matchCaseDef) ~ "}".skip)).map {
       case e ~ seq =>
         if(seq.length <= 0) {e.setPos(e)}
         else{seq.foldLeft(e) { (acc, elem) => Match(acc, elem.toList).setPos(acc) }}
@@ -197,7 +189,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
   lazy val variableOrCall: Syntax[Expr] = (identifierPos ~ opt(opt("." ~ identifier) ~ "(" ~ arguments ~ ")")).map {
     case idPos ~ None => StringLiteral(idPos._1).setPos(idPos._2) //variable
     case idPos ~ Some(None ~ _ ~ args ~ _) => Call(QualifiedName(None, idPos._1), args).setPos(idPos._2) //call
-    case idPos ~ Some(Some(_ ~ idParent) ~ _ ~ args ~ _) => Call(QualifiedName(Some(idParent), idPos._1), args).setPos(idPos._2) //call
+    case idPos ~ Some(Some(_ ~ idSon) ~ _ ~ args ~ _) => Call(QualifiedName(Option(idPos._1), idSon), args).setPos(idPos._2) //call
   }
 
   // A literal expression.
@@ -216,7 +208,7 @@ object Parser extends Pipeline[Iterator[Token], Program]
 
   // A pattern as part of a mach case.
   lazy val pattern: Syntax[Pattern] = recursive {
-    literalPattern | wildPattern | idOrCaseClassPattern
+    literalPattern | wildPattern | idOrCaseClassPattern | unitPattern
   }
 
   lazy val literalPattern: Syntax[Pattern] = literal.map { lit => LiteralPattern(lit).setPos(lit) }
@@ -226,7 +218,12 @@ object Parser extends Pipeline[Iterator[Token], Program]
   lazy val idOrCaseClassPattern: Syntax[Pattern] = (identifierPos ~ opt(opt("." ~ identifier) ~ "(" ~ patterns ~ ")")).map {
     case idPos ~ None => IdPattern(idPos._1).setPos(idPos._2) // idPattern
     case idPos ~ Some(None ~ _ ~ pats ~ _) => CaseClassPattern(QualifiedName(None, idPos._1), pats)
-    case idPos ~ Some(Some(_ ~ idParent) ~ _ ~ pats ~ _) => CaseClassPattern(QualifiedName(Some(idParent), idPos._1), pats)
+    case idPos ~ Some(Some(_ ~ idSon) ~ _ ~ pats ~ _) => CaseClassPattern(QualifiedName(Option(idPos._1), idSon), pats)
+  }
+
+
+  lazy val unitPattern:Syntax[Pattern] = ("(" ~ ")").map{
+    case o ~ _ => LiteralPattern(UnitLiteral()).setPos(o)
   }
 
   lazy val patterns: Syntax[List[Pattern]] = recursive {

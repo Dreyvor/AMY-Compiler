@@ -1,1 +1,8 @@
+[0m[[0m[0mdebug[0m] [0m[0mThe amyc.parsing.Parser$ has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(unitPattern,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0m[0mdebug[0m] [0m[0mFiles invalidated by inheriting from (external) amyc.parsing.Parser$: Set(); now invalidating by inheritance (internally).[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting direct dependencies of all classes transitively invalidated by inheritance.[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting classes that directly depend on (external) amyc.parsing.Parser$.[0m
+[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of amyc.test.ParserTests. This dependency is not being considered for invalidation.[0m
 [0m[[0m[0mdebug[0m] [0m[0mNo changes[0m
