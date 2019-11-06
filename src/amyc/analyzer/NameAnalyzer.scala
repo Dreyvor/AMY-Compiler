@@ -99,9 +99,10 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
     def transformDef(df: N.ClassOrFunDef, module: String): S.ClassOrFunDef = {
       df match {
         case N.AbstractClassDef(name) =>
-          ??? // TODO
+          S.AbstractClassDef(table.getType(module, name).get)
         case N.CaseClassDef(name, _, _) =>
-          ??? // TODO
+          val Some((id, constrSig)) = table.getConstructor(module, name)
+          S.CaseClassDef(id, constrSig.argTypes.map(S.TypeTree), constrSig.parent)
         case fd: N.FunDef =>
           transformFunDef(fd, module)
       }
