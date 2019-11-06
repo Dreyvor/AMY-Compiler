@@ -46,33 +46,66 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
     }
 
     // Step 2: Check name uniqueness of definitions in each module
-    // TODO
+    val namesByModule: List[(N.Name, List[N.ClassOrFunDef])] = p.modules.map(mod => (mod.name, mod.defs))
+    namesByModule.foreach {
+      mod =>
+        mod._2.groupBy(_.name).foreach {
+          case (name, l) => if (l.size > 1) fatal(s"Two definitions named $name in ${mod._1}", l.head.position)
+        }
+    }
+
 
     // Step 3: Discover types and add them to symbol table
-    // TODO
+    p.modules.foreach {
+       mod =>
+        mod.defs.foreach {
+          case N.AbstractClassDef(name) => table.addType(mod.name, name)
+          case _ =>
+        }
+    }
 
     // Step 4: Discover type constructors, add them to table
-    // TODO
+    p.modules.foreach {
+       mod =>
+        mod.defs.foreach {
+          case ccd@N.CaseClassDef(name, fields, parent) =>
+            if (table.getType(mod.name, parent).isEmpty) {
+              fatal(s"Parent ($parent) type of class ($name) must be in the same module ($mod)", ccd)
+            } else {
+              table.addConstructor(mod.name, name, fields.map(transformType(_, mod.name)), table.getType(mod.name, parent).get)
+            }
+          case _ =>
+        }
+    }
 
     // Step 5: Discover functions signatures, add them to table
-    // TODO
+    p.modules.foreach{
+      mod =>
+        mod.defs.foreach{
+          case N.FunDef(name, params, retType, _) =>
+            table.addFunction(mod.name,name,params.map(param => transformType(param.tt, mod.name)), transformType(retType,mod.name))
+          case _ =>
+        }
+    }
 
     // Step 6: We now know all definitions in the program.
     //         Reconstruct modules and analyse function bodies/ expressions
-    
+
     // This part is split into three transfrom functions,
     // for definitions, FunDefs, and expressions.
     // Keep in mind that we transform constructs of the NominalTreeModule 'N' to respective constructs of the SymbolicTreeModule 'S'.
     // transformFunDef is given as an example, as well as some code for the other ones
 
-    def transformDef(df: N.ClassOrFunDef, module: String): S.ClassOrFunDef = { df match {
-      case N.AbstractClassDef(name) =>
-        ???  // TODO
-      case N.CaseClassDef(name, _, _) =>
-        ???  // TODO
-      case fd: N.FunDef =>
-        transformFunDef(fd, module)
-    }}.setPos(df)
+    def transformDef(df: N.ClassOrFunDef, module: String): S.ClassOrFunDef = {
+      df match {
+        case N.AbstractClassDef(name) =>
+          ??? // TODO
+        case N.CaseClassDef(name, _, _) =>
+          ??? // TODO
+        case fd: N.FunDef =>
+          transformFunDef(fd, module)
+      }
+      }.setPos(df)
 
     def transformFunDef(fd: N.FunDef, module: String): S.FunDef = {
       val N.FunDef(name, params, retType, body) = fd
@@ -114,19 +147,19 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
           // from strings to unique identifiers for names bound in the pattern.
           // Also, calls 'fatal' if a new name violates the Amy naming rules.
           def transformPattern(pat: N.Pattern): (S.Pattern, List[(String, Identifier)]) = {
-            ???  // TODO
+            ??? // TODO
           }
 
           def transformCase(cse: N.MatchCase) = {
             val N.MatchCase(pat, rhs) = cse
             val (newPat, moreLocals) = transformPattern(pat)
-            ???  // TODO
+            ??? // TODO
           }
 
           S.Match(transformExpr(scrut), cases.map(transformCase))
 
         case _ =>
-          ???  // TODO: Implement the rest of the cases
+          ??? // TODO: Implement the rest of the cases
       }
       res.setPos(expr)
     }
@@ -145,4 +178,5 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
     (newProgram, table)
 
   }
+
 }

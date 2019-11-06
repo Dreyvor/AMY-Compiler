@@ -1,4 +1,5 @@
 object Arithmetic {
+
   def pow(b: Int, e: Int): Int = {
     if (e == 0) { 1 }
     else {
