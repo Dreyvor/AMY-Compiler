@@ -158,15 +158,14 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
                   (S.CaseClassPattern(myClass.get._1, myArgs.map(_._1)).setPos(pat.position), myArgs.flatMap(_._2))
                 }
 
-
               case pat2@N.IdPattern(name) =>
                 if (locals.contains(name)) {
                   fatal(s"Multiple definitions for $name", pat2)
                 } else {
                   //check if there is a nullary constructor with same name
                   val myConstr = table.getConstructor(module, name)
-                  if (myConstr.isEmpty || myConstr.get._2.argTypes.isEmpty) {
-                    warning(s"An identifier pattern ($name) is used which has the same name with a nullary constructor (" + myConstr.get._1.name + ")")
+                  if (myConstr.isEmpty || myConstr.get._2.argTypes.isEmpty) { //TODO: Comment it or not ?
+                    warning(s"An identifier pattern ($name) is used which has the same name with a nullary constructor", pat2)
                   }
                   val newName = Identifier.fresh(name)
                   (S.IdPattern(newName).setPos(pat.position), List((name, newName)))
@@ -180,14 +179,14 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
 
           def transformCase(cse: N.MatchCase) = {
             val N.MatchCase(pat, rhs) = cse
-            val (newPat, moreLocals) = transformPattern(pat)
-            moreLocals.groupBy(_._1).foreach {
+            val (newPat, newLocals) = transformPattern(pat)
+            newLocals.groupBy(_._1).foreach {
               case (name, tuples) =>
                 if (tuples.size > 1) {
                   fatal(s"Duplicate variable $name in $pat", cse)
                 }
             }
-            S.MatchCase(newPat, transformExpr(rhs)(module, (params, locals ++ moreLocals))).setPos(cse.position)
+            S.MatchCase(newPat, transformExpr(rhs)(module, (params, locals ++ newLocals))).setPos(cse.position)
           }
 
           S.Match(transformExpr(scrut), cases.map(transformCase))
@@ -222,7 +221,7 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
           } else if (params.contains(name)) {
             S.Variable(params(name))
           } else {
-            fatal(s"No such variable ($name) in locals or in parameters", myVar)
+            fatal(s"No such variable ($name) declared in locals or in parameters", myVar)
           }
 
         case c@N.Call(qname, args) =>
