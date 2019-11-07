@@ -163,6 +163,11 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
                 if (locals.contains(name)) {
                   fatal(s"Multiple definitions for $name", pat2)
                 } else {
+                  //check if there is a nullary constructor with same name
+                  val myConstr = table.getConstructor(module, name)
+                  if (myConstr.isEmpty || myConstr.get._2.argTypes.isEmpty) {
+                    warning(s"An identifier pattern ($name) is used which has the same name with a nullary constructor (" + myConstr.get._1.name + ")")
+                  }
                   val newName = Identifier.fresh(name)
                   (S.IdPattern(newName).setPos(pat.position), List((name, newName)))
                 }
@@ -240,14 +245,13 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
           if (locals.contains(df.name)) {
             fatal("The variable " + df.name + " is already defined in locals", n)
           } else if (params.contains(df.name)) {
-            fatal("The variable " + df.name + " is already defined in params", n)
-          } else {
-            //get new id
-            val newId = Identifier.fresh(df.name)
-            // adapt locals
-            val localToAdd = (df.name, newId)
-            S.Let(S.ParamDef(newId, S.TypeTree(transformType(df.tt, module))), transformExpr(value), transformExpr(body)(module, (params, locals + localToAdd)))
+            warning("The variable " + df.name + " is already defined in params ==> shadowing", n)
           }
+          //get new id
+          val newId = Identifier.fresh(df.name)
+          // adapt locals
+          val localToAdd = (df.name, newId)
+          S.Let(S.ParamDef(newId, S.TypeTree(transformType(df.tt, module))), transformExpr(value), transformExpr(body)(module, (params, locals + localToAdd)))
 
         case _ => fatal("Unknown expression in transformCase", expr)
       }

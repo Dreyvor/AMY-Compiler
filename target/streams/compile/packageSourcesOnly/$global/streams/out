@@ -22,10 +22,14 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Parser.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Reporter.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Reporter.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/SymbolTable.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/SymbolTable.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/ast/TreeModule.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/AmycFatalError.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/AmycFatalError.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/NameAnalyzer.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/NameAnalyzer.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Lexer.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/parsing/Lexer.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/Printer.scala[0m
