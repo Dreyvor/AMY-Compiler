@@ -156,12 +156,10 @@ object TypeChecker extends Pipeline[(Program, SymbolTable), (Program, SymbolTabl
           }
 
         case Sequence(e1, e2) =>
-          val e2Type = TypeVariable.fresh()
-          genConstraints(e1, TypeVariable.fresh()) ++ genConstraints(e2, e2Type) ++ topLevelConstraint(e2Type) //TODO: Check return type
+          genConstraints(e1, TypeVariable.fresh()) ++ genConstraints(e2, TypeVariable.fresh()) ++ topLevelConstraint(expected)
 
         case Let(df, value, body) =>
-          val bodyType = TypeVariable.fresh()
-          genConstraints(value, df.tt.tpe) ++ genConstraints(body, bodyType)(env + (df.name -> df.tt.tpe)) ++ topLevelConstraint(bodyType) //TODO: Check return type
+          genConstraints(value, df.tt.tpe) ++ genConstraints(body, TypeVariable.fresh())(env + (df.name -> df.tt.tpe)) ++ topLevelConstraint(expected)
 
         case Ite(cond, thenn, elze) =>
           genConstraints(cond, BooleanType) ++ genConstraints(thenn, expected) ++ genConstraints(elze, expected) ++ topLevelConstraint(expected)

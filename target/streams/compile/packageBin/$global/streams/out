@@ -102,6 +102,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/SymbolTable.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$FunDef$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$FunDef$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/NominalPrinter.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/NominalPrinter.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/AmycFatalError$.class[0m
@@ -166,6 +168,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/utils/Context$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Tokens$EOFToken.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/parsing/Tokens$EOFToken.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$TypeVariable$4$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$TypeVariable$4$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Parser$$anonfun$5.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/parsing/Parser$$anonfun$5.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$ParamDef.class[0m
@@ -182,6 +186,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$StringType$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/Printer.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/Printer.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$Constraint$4$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$Constraint$4$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$Program$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$Program$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$Sequence$.class[0m
@@ -202,6 +208,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$MatchCase.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/SourcePosition$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/utils/SourcePosition$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$Constraint$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$Constraint$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$Plus$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$Plus$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$Mod.class[0m
@@ -234,6 +242,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/NominalPrinter$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Tokens$IdentifierToken.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/parsing/Tokens$IdentifierToken.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Noop$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/utils/Noop$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/NominalTreeModule$.class[0m
@@ -276,6 +286,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$Equals.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Tokens$SpaceToken.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/parsing/Tokens$SpaceToken.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$TypeVariable$3.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$TypeVariable$3.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Raw$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/utils/Raw$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$Match$.class[0m
@@ -410,6 +422,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/Signature.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/parsing/Parser$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/parsing/Parser$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker$$anonfun$$nestedInanonfun$run$7$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/analyzer/TypeChecker$$anonfun$$nestedInanonfun$run$7$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/ast/TreeModule$LessEquals$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/ast/TreeModule$LessEquals$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Stacked$.class[0m

@@ -8,6 +8,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/ast/Identifier.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/Pipeline.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/Pipeline.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/analyzer/TypeChecker.scala[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/TypeChecker.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/utils/UniqueCounter.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/utils/UniqueCounter.scala[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/Main.scala[0m
