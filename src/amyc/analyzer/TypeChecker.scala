@@ -135,20 +135,20 @@ object TypeChecker extends Pipeline[(Program, SymbolTable), (Program, SymbolTabl
         case Call(qname, args) =>
           //It could be a function or a constructor ==> Check if function or constructor
           val fct = table.getFunction(qname)
-          if(fct.isEmpty){
+          if (fct.isEmpty) {
             //It's a constructor, thus get it from table
             val constr = table.getConstructor(qname)
             //generate constraints for arguments
-            val constrArgs = args.zip(constr.get.argTypes).foldLeft(List[Constraint]()){
+            val constrArgs = args.zip(constr.get.argTypes).foldLeft(List[Constraint]()) {
               case (acc, e) => acc ++ genConstraints(e._1, e._2)
             }
             // Add top lvl
             constrArgs ++ topLevelConstraint(constr.get.retType)
 
-          }else {
+          } else {
             //It's a function
             //generate constraints for arguments
-            val constrArgs = args.zip(fct.get.argTypes).foldLeft(List[Constraint]()){
+            val constrArgs = args.zip(fct.get.argTypes).foldLeft(List[Constraint]()) {
               case (acc, e) => acc ++ genConstraints(e._1, e._2)
             }
             //Add top lvl
@@ -197,7 +197,21 @@ object TypeChecker extends Pipeline[(Program, SymbolTable), (Program, SymbolTabl
         case Constraint(found, expected, pos) :: more =>
           // HINT: You can use the `subst_*` helper above to replace a type variable
           //       by another type in your current set of constraints.
-          ??? // TODO
+          //Expected can be a variable ==> replace the variable type by the type found
+          //Expected is a "simple defined" type (Int, String, ...) ==> verify if it matches with the found type, else ==> return error
+          expected match {
+            case TypeVariable(tid) =>
+              //replace it by the actual type
+              solveConstraints(subst_*(more, tid, found))
+
+            case _ =>
+              //Check if types match or not
+              if (found.toString == expected.toString) {
+                solveConstraints(more)
+              } else {
+                error("Types don't match (expect: " + expected + "; found: " + found + ")", pos)
+              }
+          }
       }
     }
 

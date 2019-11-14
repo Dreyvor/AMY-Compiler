@@ -1,44 +1,34 @@
 [0m[[0m[0mdebug[0m] [0m[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mInitial source changes: [0m
 [0m[[0m[0mdebug[0m] [0m[0m	removed:Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0m	added: Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/TypeChecker.scala)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/Main.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	added: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/TypeChecker.scala)[0m
 [0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(amyc.MainHelpers, amyc.Main)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(amyc.analyzer.TypeChecker)[0m
 [0m[[0m[0mdebug[0m] [0m[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	external source: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(amyc.MainHelpers, amyc.Main)[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/TypeChecker.scala, /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/Main.scala)[0m
-[0m[[0m[0minfo[0m] [0m[0mCompiling 2 Scala sources to /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(amyc.analyzer.TypeChecker)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/analyzer/TypeChecker.scala)[0m
+[0m[[0m[0minfo[0m] [0m[0mCompiling 1 Scala source to /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.3[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.3[0m
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 3d6bca6 for Scala compiler version 2.12.3[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 76cb2078 for Scala compiler version 2.12.3[0m
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-feature[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m
 [0m[[0m[0mdebug[0m] [0m[0m	/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes:/home/brad/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.3.jar[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m
 [0m[[0m[0mdebug[0m] [0m[0m	/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes:/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/lib/scallion_2.12-0.3.jar[0m
-[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 6.05434274 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 2.561934469 s[0m
 [0m[[0m[0minfo[0m] [0m[0mDone compiling.[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from amyc.analyzer.TypeChecker...[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(amyc.analyzer.TypeChecker)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(amyc.analyzer.TypeChecker)[0m
-[0m[[0m[0mdebug[0m] [0m[0mThe following modified names cause invalidation of amyc.Main: Set(UsedName(isInstanceOf,[Default]), UsedName(run,[Default]), UsedName(TypeChecker,[Default]), UsedName(andThen,[Default]))[0m
-[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(amyc.analyzer.TypeChecker,ModifiedNames(changes = UsedName(equals,[Default]), UsedName(isInstanceOf,[Default]), UsedName(getClass,[Default]), UsedName(notify,[Default]), UsedName(asInstanceOf,[Default]), UsedName(toString,[Default]), UsedName(synchronized,[Default]), UsedName(==,[Default]), UsedName(run,[Default]), UsedName(wait,[Default]), UsedName(finalize,[Default]), UsedName($isInstanceOf,[Default]), UsedName(ne,[Default]), UsedName(!=,[Default]), UsedName(##,[Default]), UsedName(eq,[Default]), UsedName(hashCode,[Default]), UsedName(clone,[Default]), UsedName(TypeChecker,[Default]), UsedName(notifyAll,[Default]), UsedName(andThen,[Default]), UsedName($asInstanceOf,[Default]))) invalidates 2 classes due to The amyc.analyzer.TypeChecker has the following regular definitions changed:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	UsedName(equals,[Default]), UsedName(isInstanceOf,[Default]), UsedName(getClass,[Default]), UsedName(notify,[Default]), UsedName(asInstanceOf,[Default]), UsedName(toString,[Default]), UsedName(synchronized,[Default]), UsedName(==,[Default]), UsedName(run,[Default]), UsedName(wait,[Default]), UsedName(finalize,[Default]), UsedName($isInstanceOf,[Default]), UsedName(ne,[Default]), UsedName(!=,[Default]), UsedName(##,[Default]), UsedName(eq,[Default]), UsedName(hashCode,[Default]), UsedName(clone,[Default]), UsedName(TypeChecker,[Default]), UsedName(notifyAll,[Default]), UsedName(andThen,[Default]), UsedName($asInstanceOf,[Default]).[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by transitive inheritance: Set(amyc.analyzer.TypeChecker)[0m
-[0m[[0m[0mdebug[0m] [0m[0m	> [0m
-[0m[[0m[0mdebug[0m] [0m[0m	> by member reference: Set(amyc.Main)[0m
-[0m[[0m[0mdebug[0m] [0m[0m        [0m
 [0m[[0m[0mdebug[0m] [0m[0mNew invalidations:[0m
-[0m[[0m[0mdebug[0m] [0m[0m	Set(amyc.Main)[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set(amyc.Main)[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mAll newly invalidated classes after taking into account (previously) recompiled classes:Set()[0m
