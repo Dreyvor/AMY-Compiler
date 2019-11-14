@@ -66,12 +66,30 @@ object TypeChecker extends Pipeline[(Program, SymbolTable), (Program, SymbolTabl
           // (This is analogous to `transformPattern` in NameAnalyzer.)
           def handlePattern(pat: Pattern, scrutExpected: Type):
           (List[Constraint], Map[Identifier, Type]) = {
-            ??? // TODO
+            pat match {
+              case CaseClassPattern(constr, args) =>
+                val constraintConstructor = Constraint(table.getConstructor(constr).get.retType, scrutExpected, pat.position)
+                //We have to re-evaluate the pattern from args. Need to zip them with their respective type from table
+                val constraintArgs = args.zip(table.getConstructor(constr).get.argTypes).map(e => handlePattern(e._1, e._2))
+                //We have to put everything together
+                constraintArgs.foldLeft((List(constraintConstructor), Map[Identifier, Type]())) {
+                  case ((lAcc, mAcc), (l, m)) => (lAcc ++ l, mAcc ++ m)
+                }
+
+              case IdPattern(name) =>
+                (genConstraints(Variable(name), scrutExpected)(env + (name -> scrutExpected)), Map(name -> scrutExpected))
+
+              case LiteralPattern(lit) =>
+                (genConstraints(lit, scrutExpected), Map.empty)
+
+              case WildcardPattern() =>
+                (Nil, Map.empty)
+            }
           }
 
           def handleCase(cse: MatchCase, scrutExpected: Type): List[Constraint] = {
             val (patConstraints, moreEnv) = handlePattern(cse.pat, scrutExpected)
-            ??? // TODO
+            patConstraints ++ genConstraints(cse.expr, expected)(env ++ moreEnv) ++ topLevelConstraint(expected)
           }
 
           val st = TypeVariable.fresh()
@@ -114,20 +132,42 @@ object TypeChecker extends Pipeline[(Program, SymbolTable), (Program, SymbolTabl
         case Neg(lhs) =>
           genConstraints(lhs, IntType) ++ topLevelConstraint(IntType)
 
-        case Call(qname, args) => ???
+        case Call(qname, args) =>
+          //It could be a function or a constructor ==> Check if function or constructor
+          val fct = table.getFunction(qname)
+          if(fct.isEmpty){
+            //It's a constructor, thus get it from table
+            val constr = table.getConstructor(qname)
+            //generate constraints for arguments
+            val constrArgs = args.zip(constr.get.argTypes).foldLeft(List[Constraint]()){
+              case (acc, e) => acc ++ genConstraints(e._1, e._2)
+            }
+            // Add top lvl
+            constrArgs ++ topLevelConstraint(constr.get.retType)
 
-        case Sequence(e1, e2) => ???
+          }else {
+            //It's a function
+            //generate constraints for arguments
+            val constrArgs = args.zip(fct.get.argTypes).foldLeft(List[Constraint]()){
+              case (acc, e) => acc ++ genConstraints(e._1, e._2)
+            }
+            //Add top lvl
+            constrArgs ++ topLevelConstraint(fct.get.retType)
+          }
 
-        case Let(df, value, body) => ???
+        case Sequence(e1, e2) =>
+          val e2Type = TypeVariable.fresh()
+          genConstraints(e1, TypeVariable.fresh()) ++ genConstraints(e2, e2Type) ++ topLevelConstraint(e2Type) //TODO: Check return type
+
+        case Let(df, value, body) =>
+          val bodyType = TypeVariable.fresh()
+          genConstraints(value, df.tt.tpe) ++ genConstraints(body, bodyType)(env + (df.name -> df.tt.tpe)) ++ topLevelConstraint(bodyType) //TODO: Check return type
 
         case Ite(cond, thenn, elze) =>
           genConstraints(cond, BooleanType) ++ genConstraints(thenn, expected) ++ genConstraints(elze, expected) ++ topLevelConstraint(expected)
 
         case Error(msg) =>
           genConstraints(msg, StringType) ++ topLevelConstraint(expected)
-
-        case _ =>
-          ??? // TODO: Implement the remaining cases
       }
     }
 
