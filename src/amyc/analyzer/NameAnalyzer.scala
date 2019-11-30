@@ -164,7 +164,7 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
                 } else {
                   //check if there is a nullary constructor with same name
                   val myConstr = table.getConstructor(module, name)
-                  if (myConstr.isEmpty || myConstr.get._2.argTypes.isEmpty) { //TODO: Comment it or not ?
+                  if (myConstr.isEmpty || myConstr.get._2.argTypes.isEmpty) {
                     warning(s"An identifier pattern ($name) is used which has the same name with a nullary constructor", pat2)
                   }
                   val newName = Identifier.fresh(name)
@@ -201,7 +201,6 @@ object NameAnalyzer extends Pipeline[N.Program, (S.Program, SymbolTable)] {
         case N.Not(e) => S.Not(transformExpr(e))
         case N.Error(msg) => S.Error(transformExpr(msg))
         case N.Or(lhs, rhs) => S.Or(transformExpr(lhs), transformExpr(rhs))
-        //case _: N.Literal[_] => ??? //TODO: Check if we need this !
         case N.And(lhs, rhs) => S.And(transformExpr(lhs), transformExpr(rhs))
         case N.Div(lhs, rhs) => S.Div(transformExpr(lhs), transformExpr(rhs))
         case N.Mod(lhs, rhs) => S.Mod(transformExpr(lhs), transformExpr(rhs))

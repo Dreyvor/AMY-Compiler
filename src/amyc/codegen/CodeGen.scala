@@ -77,7 +77,29 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
         case Neg(lhs) => Const(0) <:> cgExpr(lhs) <:> Sub
 
         // Harder translations
-        case AmyCall(qname, args) => ???
+        case AmyCall(qname, args) => // Remember that it can be a function or a constructor !
+          val fct = table.getFunction(qname)
+          if (fct.nonEmpty) {
+            //it's a function call ==> put args on the stack then call the fct
+            args.map(cgExpr(_)) <:> Call(fullName(fct.get.owner, qname))
+          } else {
+            //it's a constructor
+            val constr = table.getConstructor(qname)
+            val idxConstr = constr.get.index
+            val idxB = lh.getFreshLocal()
+
+            //Now exec algorithm from slides
+            //Save the old memory boundary b
+            GetLocal(memoryBoundary) <:> SetLocal(idxB) <:>
+              // Increment memory boundary by the size of the allocated ADT
+              GetLocal(memoryBoundary) <:> adtField(args.size) <:> SetLocal(memoryBoundary) <:>
+              // Store the constructor index to address b
+              GetLocal(idxB) <:> Const(idxConstr) <:> Store <:>
+              // For each field of the constructor, generate code for it and store it in memory in the correct offset from b
+              args.zipWithIndex.map { case (arg, idx) => GetLocal(idxB) <:> adtField(idx) <:> cgExpr(arg) <:> Store } <:>
+              // Push b to the stack (base address of the ADT)
+              GetLocal(idxB)
+          }
 
         case Sequence(e1, e2) => cgExpr(e1) <:> Drop <:> cgExpr(e2)
 
