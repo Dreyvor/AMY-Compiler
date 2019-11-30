@@ -79,15 +79,18 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
         // Harder translations
         case AmyCall(qname, args) => ???
 
-        case Sequence(e1, e2) => ???
+        case Sequence(e1, e2) => cgExpr(e1) <:> Drop <:> cgExpr(e2)
 
-        case Let(df, value, body) => ???
+        case Let(df, value, body) => //We have to add something to locals
+          val idx: Int = lh.getFreshLocal()
+          val newLocals: Map[Identifier, Int] = locals + (df.name -> idx)
+          cgExpr(value) <:> SetLocal(idx) <:> cgExpr(body)(newLocals, lh)
 
-        case Ite(cond, thenn, elze) => ???
+        case Ite(cond, thenn, elze) => cgExpr(cond) <:> If_i32 <:> cgExpr(thenn) <:> Else <:> cgExpr(elze) <:> End
 
         case Match(scrut, cases) => ???
 
-        case Error(msg) => ???
+        case Error(msg) => cgExpr(msg) <:> Call("Std_printString") <:> Unreachable //print error then fails the program
       }
     }
 
