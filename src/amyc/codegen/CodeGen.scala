@@ -110,7 +110,44 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
 
         case Ite(cond, thenn, elze) => cgExpr(cond) <:> If_i32 <:> cgExpr(thenn) <:> Else <:> cgExpr(elze) <:> End
 
-        case Match(scrut, cases) => ???
+        case Match(scrut, cases) =>
+          val scrutVal = lh.getFreshLocal()
+
+          def resolveCases(cases: List[MatchCase]): Code = {
+            cases match {
+              case Nil => mkString("ERROR: No case matches") <:> Call("Std_printString") <:> Unreachable
+              case head :: tl =>
+                val (caseCode, newLocals) = matchAndBind(head.pat)
+                GetLocal(scrutVal) <:> caseCode <:> If_i32 <:> cgExpr(head.expr)(locals ++ newLocals, lh) <:> Else <:> resolveCases(tl) <:> End
+            }
+          }
+
+          def matchAndBind(p: Pattern)(implicit locals: Map[Identifier, Int]): (Code, Map[Identifier, Int]) = {
+            p match {
+              case WildcardPattern() =>
+                (Drop <:> Const(1), Map.empty)
+
+              case LiteralPattern(lit) =>
+                (cgExpr(lit) <:> Eq, Map.empty)
+
+              case IdPattern(name) =>
+                val idxName = lh.getFreshLocal()
+                (SetLocal(idxName) <:> Const(1), Map(name -> idxName))
+
+              case CaseClassPattern(constr, args) =>
+                val constrLocal = lh.getFreshLocal()
+                val idxConstr = table.getConstructor(constr).get.index
+                var newLocalsAcc: Map[Identifier, Int] = Map.empty
+                (SetLocal(constrLocal) <:> GetLocal(constrLocal) <:> Load <:> Const(idxConstr) <:> Eq <:> args.zipWithIndex.map {
+                  case (arg, idx) =>
+                    val (code, newLocals) = matchAndBind(arg)
+                    newLocalsAcc = newLocalsAcc ++ newLocals
+                    GetLocal(constrLocal) <:> adtField(idx) <:> Load <:> code
+                } <:> List.fill(args.size)(And), newLocalsAcc)
+            }
+          }
+
+          cgExpr(scrut) <:> SetLocal(scrutVal) <:> resolveCases(cases)
 
         case Error(msg) => cgExpr(msg) <:> Call("Std_printString") <:> Unreachable //print error then fails the program
       }
