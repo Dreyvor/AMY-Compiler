@@ -72,6 +72,7 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
         // Evaluates lhs, if return is 0 ==> return 0, else return the evaluated rhs' value
         case AmyAnd(lhs, rhs) => cgExpr(lhs) <:> If_i32 <:> cgExpr(rhs) <:> Else <:> Const(0) <:> End
         case AmyOr(lhs, rhs) => cgExpr(lhs) <:> If_i32 <:> Const(1) <:> Else <:> cgExpr(rhs) <:> End
+        case Equals(lhs, rhs) => cgExpr(lhs) <:> cgExpr(rhs) <:> Eq
         case Concat(lhs, rhs) => cgExpr(lhs) <:> cgExpr(rhs) <:> Call("String_concat")
         case Not(lhs) => cgExpr(lhs) <:> If_i32 <:> Const(0) <:> Else <:> Const(1) <:> End
         case Neg(lhs) => Const(0) <:> cgExpr(lhs) <:> Sub
