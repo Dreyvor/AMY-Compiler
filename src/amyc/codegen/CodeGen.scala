@@ -80,7 +80,7 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
         // Harder translations
         case AmyCall(qname, args) => // Remember that it can be a function or a constructor !
           val fct = table.getFunction(qname)
-          if (fct.nonEmpty) {
+          if (fct.isDefined) {
             //it's a function call ==> put args on the stack then call the fct
             args.map(cgExpr(_)) <:> Call(fullName(fct.get.owner, qname))
           } else {
@@ -138,12 +138,21 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
                 val constrLocal = lh.getFreshLocal()
                 val idxConstr = table.getConstructor(constr).get.index
                 var newLocalsAcc: Map[Identifier, Int] = Map.empty
-                (SetLocal(constrLocal) <:> GetLocal(constrLocal) <:> Load <:> Const(idxConstr) <:> Eq <:> args.zipWithIndex.map {
+                /*val fillArgs: Code = if (args.nonEmpty) args.zipWithIndex.map {
                   case (arg, idx) =>
                     val (code, newLocals) = matchAndBind(arg)
                     newLocalsAcc = newLocalsAcc ++ newLocals
                     GetLocal(constrLocal) <:> adtField(idx) <:> Load <:> code
-                } <:> List.fill(args.size)(And), newLocalsAcc)
+                } else Const(1)
+                */
+
+                (SetLocal(constrLocal) <:> GetLocal(constrLocal) <:> Load <:> Const(idxConstr) <:> Eq <:> //If_i32 <:>
+                  args.zipWithIndex.map {
+                    case (arg, idx) =>
+                      val (code, newLocals) = matchAndBind(arg)
+                      newLocalsAcc = newLocalsAcc ++ newLocals
+                      GetLocal(constrLocal) <:> adtField(idx) <:> Load <:> code
+                  } <:> List.fill(args.size)(And) /*<:> Else <:> Const(0) <:> End*/, newLocalsAcc)
             }
           }
 

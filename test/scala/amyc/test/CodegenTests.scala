@@ -5,9 +5,12 @@ import amyc.analyzer.{NameAnalyzer, TypeChecker}
 import amyc.codegen._
 import amyc.wasm.Module
 import amyc.utils._
+
 import scala.sys.process._
 import scala.collection.JavaConverters._
 import java.io.ByteArrayInputStream
+
+import org.junit.Test
 
 class CodegenTests extends ExecutionTests {
 
@@ -28,9 +31,10 @@ class CodegenTests extends ExecutionTests {
 
   val pipeline =
     Lexer andThen
-    Parser andThen
-    NameAnalyzer andThen
-    TypeChecker andThen
-    CodeGen andThen
-    CodePrinterExecutor
+      Parser andThen
+      NameAnalyzer andThen
+      TypeChecker andThen
+      CodeGen andThen
+      CodePrinterExecutor
+
 }
