@@ -85,8 +85,7 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
             args.map(cgExpr(_)) <:> Call(fullName(fct.get.owner, qname))
           } else {
             //it's a constructor
-            val constr = table.getConstructor(qname)
-            val idxConstr = constr.get.index
+            val idxConstr = table.getConstructor(qname).get.index
             val idxB = lh.getFreshLocal()
 
             //Now exec algorithm from slides
