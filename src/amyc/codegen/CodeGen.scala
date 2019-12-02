@@ -90,9 +90,9 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
 
             //Now exec algorithm from slides
             //Save the old memory boundary b
-            GetLocal(memoryBoundary) <:> SetLocal(idxB) <:>
+            GetGlobal(memoryBoundary) <:> SetLocal(idxB) <:>
               // Increment memory boundary by the size of the allocated ADT
-              GetLocal(memoryBoundary) <:> adtField(args.size) <:> SetLocal(memoryBoundary) <:>
+              GetGlobal(memoryBoundary) <:> adtField(args.size) <:> SetGlobal(memoryBoundary) <:>
               // Store the constructor index to address b
               GetLocal(idxB) <:> Const(idxConstr) <:> Store <:>
               // For each field of the constructor, generate code for it and store it in memory in the correct offset from b
@@ -138,21 +138,14 @@ object CodeGen extends Pipeline[(Program, SymbolTable), Module] {
                 val constrLocal = lh.getFreshLocal()
                 val idxConstr = table.getConstructor(constr).get.index
                 var newLocalsAcc: Map[Identifier, Int] = Map.empty
-                /*val fillArgs: Code = if (args.nonEmpty) args.zipWithIndex.map {
-                  case (arg, idx) =>
-                    val (code, newLocals) = matchAndBind(arg)
-                    newLocalsAcc = newLocalsAcc ++ newLocals
-                    GetLocal(constrLocal) <:> adtField(idx) <:> Load <:> code
-                } else Const(1)
-                */
 
-                (SetLocal(constrLocal) <:> GetLocal(constrLocal) <:> Load <:> Const(idxConstr) <:> Eq <:> //If_i32 <:>
+                (SetLocal(constrLocal) <:> GetLocal(constrLocal) <:> Load <:> Const(idxConstr) <:> Eq <:>
                   args.zipWithIndex.map {
                     case (arg, idx) =>
                       val (code, newLocals) = matchAndBind(arg)
                       newLocalsAcc = newLocalsAcc ++ newLocals
                       GetLocal(constrLocal) <:> adtField(idx) <:> Load <:> code
-                  } <:> List.fill(args.size)(And) /*<:> Else <:> Const(0) <:> End*/, newLocalsAcc)
+                  } <:> List.fill(args.size)(And), newLocalsAcc)
             }
           }
 
