@@ -3,5 +3,7 @@
 amyc_2.12-1.6.jar
 .gitignore
 secu_docs/
+test/resources/interpreter/
 test/resources/nameAnalyzer/
 test/resources/parser/
+generateTests.sh
