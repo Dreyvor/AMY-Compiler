@@ -6,25 +6,25 @@
 [0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(amyc.interpreter.Interpreter.CaseClassValue, amyc.interpreter.Interpreter.Value, amyc.interpreter.Interpreter.BooleanValue, amyc.interpreter.Interpreter, amyc.interpreter.Interpreter.IntValue, amyc.interpreter.Interpreter.StringValue, amyc.interpreter.Interpreter.UnitValue)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(amyc.interpreter.Interpreter.CaseClassValue, amyc.interpreter.Interpreter.Value, amyc.interpreter.Interpreter.BooleanValue, amyc.interpreter.Interpreter, amyc.interpreter.Interpreter.Thunk, amyc.interpreter.Interpreter.IntValue, amyc.interpreter.Interpreter.StringValue, amyc.interpreter.Interpreter.UnitValue)[0m
 [0m[[0m[0mdebug[0m] [0m[0m[0m
 [0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
 [0m[[0m[0mdebug[0m] [0m[0m	external source: Set()[0m
-[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(amyc.interpreter.Interpreter.CaseClassValue, amyc.interpreter.Interpreter.Value, amyc.interpreter.Interpreter.BooleanValue, amyc.interpreter.Interpreter, amyc.interpreter.Interpreter.IntValue, amyc.interpreter.Interpreter.StringValue, amyc.interpreter.Interpreter.UnitValue)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(amyc.interpreter.Interpreter.CaseClassValue, amyc.interpreter.Interpreter.Value, amyc.interpreter.Interpreter.BooleanValue, amyc.interpreter.Interpreter, amyc.interpreter.Interpreter.Thunk, amyc.interpreter.Interpreter.IntValue, amyc.interpreter.Interpreter.StringValue, amyc.interpreter.Interpreter.UnitValue)[0m
 [0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/src/amyc/interpreter/Interpreter.scala)[0m
 [0m[[0m[0minfo[0m] [0m[0mCompiling 1 Scala source to /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.3[0m
 [0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.12:1.2.5:compile for Scala 2.12.3[0m
-[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 68c7182f for Scala compiler version 2.12.3[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 729a3073 for Scala compiler version 2.12.3[0m
 [0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-feature[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m
 [0m[[0m[0mdebug[0m] [0m[0m	/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes:/home/brad/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.3.jar[0m
 [0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m
 [0m[[0m[0mdebug[0m] [0m[0m	/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes:/media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/lib/amyc-frontend-1.6.jar[0m
-[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 5.745711382 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 0.707955336 s[0m
 [0m[[0m[0minfo[0m] [0m[0mDone compiling.[0m
 [0m[[0m[0mdebug[0m] [0m[0mNew invalidations:[0m
 [0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
