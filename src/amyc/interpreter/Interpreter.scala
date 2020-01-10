@@ -317,7 +317,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           Thunk(None, Not(e), locals)
         case Neg(e) =>
           Thunk(None, Neg(e), locals)
-        case Call(qname, args) => //TODO: We need to interpret only the first step of args for a List
+        case Call(qname, args) => //We need to interpret only the first step of args for a List. Return thunks otherwise
           if (isConstructor(qname)) {
             CaseClassValue(qname, args.map(e => Thunk(None, e, locals)))
           }
@@ -326,7 +326,6 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           }
           else {
             val myFunc: FunDef = findFunction(findFunctionOwner(qname), qname.name)
-            //val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap
             val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(e => Thunk(None, e, locals))).toMap
             interpretLazy(myFunc.body)(newLocals)
           }
@@ -411,7 +410,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             MatchCase(pat, rhs) <- cases
             moreLocals <- matchesPattern(evS, pat)
           } {
-            return interpret(rhs)(locals ++ moreLocals) //TODO: check if interpret or interpretLazy
+            return interpret(rhs)(locals ++ moreLocals)
           }
           // No case matched: The program fails with a match error
           ctx.reporter.fatal(s"Match error: ${evS.toString}@${scrut.position}")
