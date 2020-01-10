@@ -16,6 +16,8 @@ abstract class ExecutionTests extends TestSuite {
   @Test def testPrinting = shouldOutput(List("library/Std", "library/List", "library/Option", "Printing"), "Printing")
   @Test def testTestLists = shouldOutput(List("library/Std", "library/List", "library/Option", "TestLists"), "TestLists")
   @Test def testMyOwnTest = shouldOutput(List("library/Std", "library/List", "library/Option", "myOwnTest"), "myOwnTest")
+  @Test def testInfiniteStream = shouldOutput(List("library/Std", "library/List", "library/Option", "InfiniteStream"), "InfiniteStream")
+  @Test def testHeadInfiniteStream = shouldOutput(List("library/Std", "library/List", "library/Option", "HeadInfiniteStream"), "HeadInfiniteStream")
 
 
   @Test def testMinimalError = shouldFail("MinimalError")

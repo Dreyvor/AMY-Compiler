@@ -12,9 +12,9 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
   // A class that represents a value computed by interpreting an expression
   abstract class Value {
     def asInt: Int = this match {
-      case Thunk(flag, value, e) =>
-        if (flag) {
-          value.asInstanceOf[IntValue].i
+      case Thunk(value, e, _) =>
+        if (value.isDefined) {
+          value.get.asInstanceOf[IntValue].i
         } else {
           -1 //TODO: what to do for this case?
         }
@@ -23,7 +23,11 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
 
     def asBoolean: Boolean = this.asInstanceOf[BooleanValue].b
 
+    //TODO: extends thunk for asBoolean
+
     def asString: String = this.asInstanceOf[StringValue].s
+
+    //TODO: extends thunk for asString
 
     override def toString: String = this match {
       case IntValue(i) => i.toString
@@ -32,9 +36,9 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
       case UnitValue => "()"
       case CaseClassValue(constructor, args) =>
         constructor.name + "(" + args.map(_.toString).mkString(", ") + ")"
-      case Thunk(flag, value, e) =>
-        if (flag && !value.isInstanceOf[Thunk]) {
-          value.toString
+      case Thunk(value, e, env) =>
+        if (value.isDefined && !value.get.isInstanceOf[Thunk]) {
+          value.get.toString
         } else {
           "Not evaluated:" + e.toString()
         }
@@ -51,7 +55,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
 
   case class CaseClassValue(constructor: Identifier, args: List[Value]) extends Value
 
-  case class Thunk(var flag: Boolean, var value: Value, e: Expr) extends Value
+  case class Thunk(var value: Option[Value], e: Expr, env: Map[Identifier, Value]) extends Value
 
   def run(ctx: Context)(v: (Program, SymbolTable)): Unit = {
     val (program, table) = v
@@ -88,26 +92,25 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
 
     // Interprets a function, using evaluations for local variables contained in 'locals'
     def interpret(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
-      locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
-      println("*********************") //TODO: remove it
+      //locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
+      //println("*********************") //TODO: remove it
       expr match {
         case Variable(name) => locals(name) match { //TODO: see that later
-          case t@Thunk(flag, value, e) =>
-            if (!flag) {
+          case t@Thunk(value, e, env) =>
+            if (value.isEmpty) {
               val tmp = locals(name).asInstanceOf[Thunk]
-              val res = interpret(e)
+              val res = interpret(e)(env)
               res match {
-                case r@IntValue(_) => tmp.value = r
-                case r@StringValue(_) => tmp.value = r
-                case r@BooleanValue(_) => tmp.value = r
-                case r@UnitValue => tmp.value = r
-                case r@Thunk(_, _, _) => tmp.value = r
-                case r@CaseClassValue(_, _) => tmp.value = r
+                case r@IntValue(_) => tmp.value = Some(r)
+                case r@StringValue(_) => tmp.value = Some(r)
+                case r@BooleanValue(_) => tmp.value = Some(r)
+                case r@UnitValue => tmp.value = Some(r)
+                case r@Thunk(_, _, _) => tmp.value = Some(r)
+                case r@CaseClassValue(_, _) => tmp.value = Some(r)
               }
-              tmp.flag = true
-              tmp.value
+              tmp.value.get
             } else {
-              value
+              value.get
             }
           case _ => locals(name)
         }
@@ -154,17 +157,17 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case Neg(e) =>
           IntValue(-interpret(e).asInt)
         case Call(qname, args) => //TODO: We need to interpret only the first step of args for a List
-          println("LAZY:" + qname + " with args: " + args)
+          //println("LAZY:" + qname + " with args: " + args) //TODO: remove it
           if (isConstructor(qname)) {
-            CaseClassValue(qname, args.map(interpret))//TODO: HERE FUCKING NOOB
+            CaseClassValue(qname, args.map(interpretLazy)) //TODO: HERE FUCKING NOOB
           }
           else if (builtIns.contains(findFunctionOwner(qname), qname.name)) {
-            builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret))//TODO: HERE FUCKING NOOB
+            builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) //TODO: HERE FUCKING NOOB
           }
           else {
             val myFunc: FunDef = findFunction(findFunctionOwner(qname), qname.name)
-            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap//TODO: HERE FUCKING NOOB
-            interpret(myFunc.body)(newLocals)//TODO: HERE FUCKING NOOB
+            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap //TODO: HERE FUCKING NOOB
+            interpret(myFunc.body)(newLocals) //TODO: HERE FUCKING NOOB
           }
         // Hint: Check if it is a call to a constructor first,
         //       then if it is a built-in function (otherwise it is a normal function).
@@ -179,7 +182,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             case StringLiteral(s) => locals + (df.name -> StringValue(s))
             case BooleanLiteral(b) => locals + (df.name -> BooleanValue(b))
             case UnitLiteral() => locals + (df.name -> UnitValue)
-            case _ => locals + (df.name -> Thunk(flag = false, null, value))
+            case _ => locals + (df.name -> Thunk(None, value, locals))
           })
         case Ite(cond, thenn, elze) =>
           if (interpret(cond).asBoolean) {
@@ -232,6 +235,10 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
                   if (myMap.contains(None)) None
                   else Some(myMap.flatten.flatten)
                 } else None
+
+              case (Thunk(value, e, env), _) =>
+                val tmp = interpretLazy(e)(env)
+                matchesPattern(tmp, pat)
             }
           }
 
@@ -253,13 +260,13 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
     }
 
     def interpretLazy(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
-      locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
-      println("*********************") //TODO: remove it
+      //locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
+      //println("*********************") //TODO: remove it
       expr match {
         case Variable(name) => locals(name) match { //TODO: see that later
-          case t@Thunk(flag, value, e) =>
-            if (flag) {
-              value
+          case t@Thunk(value, e, env) =>
+            if (value.isDefined) {
+              value.get
             } else {
               t
             }
@@ -275,46 +282,48 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case UnitLiteral() => //OK
           UnitValue
         case Plus(lhs, rhs) =>
-          Thunk(flag = false, null, Plus(lhs, rhs))
+          Thunk(None, Plus(lhs, rhs), locals)
         case Minus(lhs, rhs) =>
-          Thunk(flag = false, null, Minus(lhs, rhs))
+          Thunk(None, Minus(lhs, rhs), locals)
         case Times(lhs, rhs) =>
-          Thunk(flag = false, null, Times(lhs, rhs))
+          Thunk(None, Times(lhs, rhs), locals)
         case Div(lhs, rhs) =>
-          if (interpret(rhs).asInt != 0) Thunk(false, null, Div(lhs, rhs))
+          if (interpret(rhs).asInt != 0) Thunk(None, Div(lhs, rhs), locals)
           else ctx.reporter.fatal("Division by 0")
         case Mod(lhs, rhs) =>
-          if (interpret(rhs).asInt != 0) Thunk(false, null, Mod(lhs, rhs))
+          if (interpret(rhs).asInt != 0) Thunk(None, Mod(lhs, rhs), locals)
           else ctx.reporter.fatal("Modulo by 0")
         case LessThan(lhs, rhs) =>
-          Thunk(flag = false, null, LessThan(lhs, rhs))
+          Thunk(None, LessThan(lhs, rhs), locals)
         case LessEquals(lhs, rhs) =>
-          Thunk(flag = false, null, LessEquals(lhs, rhs))
+          Thunk(None, LessEquals(lhs, rhs), locals)
         case And(lhs, rhs) =>
-          Thunk(flag = false, null, And(lhs, rhs))
+          Thunk(None, And(lhs, rhs), locals)
         case Or(lhs, rhs) =>
-          Thunk(flag = false, null, Or(lhs, rhs))
+          Thunk(None, Or(lhs, rhs), locals)
         case Equals(lhs, rhs) =>
-          Thunk(flag = false, null, Equals(lhs, rhs))
+          Thunk(None, Equals(lhs, rhs), locals)
         // Hint: Take care to implement Amy equality semantics
         case Concat(lhs, rhs) =>
-          Thunk(false, null, Concat(lhs, rhs))
+          Thunk(None, Concat(lhs, rhs), locals)
         case Not(e) =>
-          Thunk(false, null, Not(e))
+          Thunk(None, Not(e), locals)
         case Neg(e) =>
-          Thunk(false, null, Neg(e))
+          Thunk(None, Neg(e), locals)
         case Call(qname, args) => //TODO: We need to interpret only the first step of args for a List
-          println(qname + " with args: " + args)
+          //println(qname + " with args: " + args)//TODO: remove it
           if (isConstructor(qname)) {
-            CaseClassValue(qname, args.map(interpretLazy))
+            //CaseClassValue(qname, args.map(interpretLazy))
+            CaseClassValue(qname, args.map(e => Thunk(None, e, locals)))
           }
           else if (builtIns.contains(findFunctionOwner(qname), qname.name)) {
             builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret))
           }
           else {
             val myFunc: FunDef = findFunction(findFunctionOwner(qname), qname.name)
-            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap
-            interpret(myFunc.body)(newLocals)
+            //val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap
+            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(e => Thunk(None, e, locals))).toMap
+            interpretLazy(myFunc.body)(newLocals)
           }
         // Hint: Check if it is a call to a constructor first,
         //       then if it is a built-in function (otherwise it is a normal function).
@@ -329,7 +338,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             case StringLiteral(s) => locals + (df.name -> StringValue(s))
             case BooleanLiteral(b) => locals + (df.name -> BooleanValue(b))
             case UnitLiteral() => locals + (df.name -> UnitValue)
-            case _ => locals + (df.name -> Thunk(flag = false, null, value))
+            case _ => locals + (df.name -> Thunk(None, value, locals))
           })
         case Ite(cond, thenn, elze) =>
           if (interpret(cond).asBoolean) { //TODO: interpret here really ?
@@ -343,7 +352,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           // Hint: We give you a skeleton to implement pattern matching
           //       and the main body of the implementation
 
-          val evS = interpretLazy(scrut)
+          val evS = interpret(scrut)
 
           // Returns a list of pairs id -> value,
           // where id has been bound to value within the pattern.
@@ -382,11 +391,11 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
                   if (myMap.contains(None)) None
                   else Some(myMap.flatten.flatten)
                 } else None
-              case (Thunk(flag, value ,e) ,_) =>
-                if(flag){
-                  matchesPattern(value, pat)
+              case (Thunk(value, e, env), _) =>
+                if (value.isDefined) {
+                  matchesPattern(value.get, pat)
                 } else {
-                  matchesPattern(interpretLazy(e), pat)
+                  matchesPattern(interpretLazy(e)(env), pat)
                 }
             }
           }
