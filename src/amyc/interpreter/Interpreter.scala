@@ -16,18 +16,30 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         if (value.isDefined) {
           value.get.asInstanceOf[IntValue].i
         } else {
-          -1 //TODO: what to do for this case?
+          -1
         }
       case _ => asInstanceOf[IntValue].i
     }
 
-    def asBoolean: Boolean = this.asInstanceOf[BooleanValue].b
+    def asBoolean: Boolean = this match {
+      case Thunk(value, e, _) =>
+        if (value.isDefined) {
+          value.get.asInstanceOf[BooleanValue].b
+        } else {
+          false
+        }
+      case _ => asInstanceOf[BooleanValue].b
+    }
 
-    //TODO: extends thunk for asBoolean
-
-    def asString: String = this.asInstanceOf[StringValue].s
-
-    //TODO: extends thunk for asString
+    def asString: String = this match {
+      case Thunk(value, e, _) =>
+        if (value.isDefined) {
+          value.get.asInstanceOf[StringValue].s
+        } else {
+          ""
+        }
+      case _ => asInstanceOf[StringValue].s
+    }
 
     override def toString: String = this match {
       case IntValue(i) => i.toString
@@ -92,10 +104,8 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
 
     // Interprets a function, using evaluations for local variables contained in 'locals'
     def interpret(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
-      //locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
-      //println("*********************") //TODO: remove it
       expr match {
-        case Variable(name) => locals(name) match { //TODO: see that later
+        case Variable(name) => locals(name) match {
           case t@Thunk(value, e, env) =>
             if (value.isEmpty) {
               val tmp = locals(name).asInstanceOf[Thunk]
@@ -156,18 +166,17 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
           BooleanValue(!interpret(e).asBoolean)
         case Neg(e) =>
           IntValue(-interpret(e).asInt)
-        case Call(qname, args) => //TODO: We need to interpret only the first step of args for a List
-          //println("LAZY:" + qname + " with args: " + args) //TODO: remove it
+        case Call(qname, args) =>
           if (isConstructor(qname)) {
-            CaseClassValue(qname, args.map(interpretLazy)) //TODO: HERE FUCKING NOOB
+            CaseClassValue(qname, args.map(interpretLazy))
           }
           else if (builtIns.contains(findFunctionOwner(qname), qname.name)) {
-            builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret)) //TODO: HERE FUCKING NOOB
+            builtIns(findFunctionOwner(qname), qname.name)(args.map(interpret))
           }
           else {
             val myFunc: FunDef = findFunction(findFunctionOwner(qname), qname.name)
-            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap //TODO: HERE FUCKING NOOB
-            interpret(myFunc.body)(newLocals) //TODO: HERE FUCKING NOOB
+            val newLocals: Map[Identifier, Value] = myFunc.paramNames.zip(args.map(interpretLazy)).toMap
+            interpret(myFunc.body)(newLocals)
           }
         // Hint: Check if it is a call to a constructor first,
         //       then if it is a built-in function (otherwise it is a normal function).
@@ -260,10 +269,8 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
     }
 
     def interpretLazy(expr: Expr)(implicit locals: Map[Identifier, Value]): Value = {
-      //locals.foreach { case (k, v) => println("key: " + k + "\tvalue: " + v) } //TODO: remove it
-      //println("*********************") //TODO: remove it
       expr match {
-        case Variable(name) => locals(name) match { //TODO: see that later
+        case Variable(name) => locals(name) match {
           case t@Thunk(value, e, env) =>
             if (value.isDefined) {
               value.get
@@ -311,9 +318,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
         case Neg(e) =>
           Thunk(None, Neg(e), locals)
         case Call(qname, args) => //TODO: We need to interpret only the first step of args for a List
-          //println(qname + " with args: " + args)//TODO: remove it
           if (isConstructor(qname)) {
-            //CaseClassValue(qname, args.map(interpretLazy))
             CaseClassValue(qname, args.map(e => Thunk(None, e, locals)))
           }
           else if (builtIns.contains(findFunctionOwner(qname), qname.name)) {
