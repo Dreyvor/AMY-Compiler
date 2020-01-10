@@ -24,6 +24,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/interpreter/Interpreter$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter/Interpreter$Value.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/interpreter/Interpreter$Value.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter/Interpreter$Thunk$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/interpreter/Interpreter$Thunk$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/interpreter[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter/Interpreter$IntValue$.class[0m
@@ -34,4 +36,6 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc[0m
 [0m[[0m[0mdebug[0m] [0m[0m	amyc/Main$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	amyc/interpreter/Interpreter$Thunk.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /media/brad/HDD_1TB_intern/EPFL/SYSCOM/BA7/Computer_language_processing/AMY-Compiler/target/scala-2.12/classes/amyc/interpreter/Interpreter$Thunk.class[0m
 [0m[[0m[0minfo[0m] [0m[0mDone packaging.[0m
