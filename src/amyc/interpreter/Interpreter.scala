@@ -345,7 +345,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             case _ => locals + (df.name -> Thunk(None, value, locals))
           })
         case Ite(cond, thenn, elze) =>
-          if (interpret(cond).asBoolean) { //TODO: interpret here really ?
+          if (interpret(cond).asBoolean) {
             interpretLazy(thenn)
           }
           else {
@@ -410,7 +410,7 @@ object Interpreter extends Pipeline[(Program, SymbolTable), Unit] {
             MatchCase(pat, rhs) <- cases
             moreLocals <- matchesPattern(evS, pat)
           } {
-            return interpret(rhs)(locals ++ moreLocals)
+            return interpretLazy(rhs)(locals ++ moreLocals)
           }
           // No case matched: The program fails with a match error
           ctx.reporter.fatal(s"Match error: ${evS.toString}@${scrut.position}")
